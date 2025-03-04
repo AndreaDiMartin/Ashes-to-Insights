@@ -1,7 +1,7 @@
 REGISTER 'pig-0.16.0/lib/piggybank.jar';
 
 -- Carga de los datos
-tracks = LOAD 'CAMBIAR/spotify_tracks.csv' 
+tracks = LOAD 'Ashes-to-Insights/tracks-sample.csv' 
 USING org.apache.pig.piggybank.storage.CSVExcelStorage(',','NO_MULTILINE','UNIX','SKIP_INPUT_HEADER') AS (id:chararray, track_name:chararray, disc_number:int, 
 duration:long, explicit:int, audio_feature_id:chararray,
 preview_url:chararray, track_number:int, popularity:int,
@@ -24,8 +24,8 @@ filtered_tracks = FOREACH tracks GENERATE   id, track_name, duration, explicit, 
 -- Quitar nulos
 no_null = FILTER tracks BY release_date IS NOT NULL AND valence IS NOT NULL;
 
-REGISTER get_release_date.py 
+REGISTER 'Ashes-to-Insights/get_release_date.py' USING jython AS mydate;
 
 -- Guardado de los datos
-STORE filtered_tracks INTO 'spotify_tracks_clean_new.csv'
+STORE filtered_tracks INTO 'Ashes-to-Insights/tracks-sample-new.csv'
 USING PigStorage(',');

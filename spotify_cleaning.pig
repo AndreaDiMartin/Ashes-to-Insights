@@ -70,7 +70,7 @@ filtered_tracks = FOREACH no_null GENERATE  id,
                                             artist_name, 
                                             artist_popularity, 
                                             followers,
-                                            CASE genre_id WHEN genre_id IS NULL THEN 'Unknown' ELSE genre_id END;
+                                            CASE genre_id WHEN NULL THEN 'Unknown' ELSE genre_id END;
                                             
 
 -- Guardado de los datos

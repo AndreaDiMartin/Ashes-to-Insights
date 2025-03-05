@@ -70,10 +70,8 @@ filtered_tracks = FOREACH no_null GENERATE  id,
                                             artist_name, 
                                             artist_popularity, 
                                             followers,
-                                            genre_id;
+                                            CASE genre_id WHEN genre_id IS NULL THEN 'Unknown' ELSE genre_id END;
                                             
-
-
 
 -- Guardado de los datos
 STORE filtered_tracks INTO 'Ashes-to-Insights/tracks-sample-new' USING PigStorage(',');

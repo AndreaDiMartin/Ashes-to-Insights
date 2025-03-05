@@ -66,7 +66,6 @@ filtered_tracks = FOREACH no_null GENERATE  id,
                                             date.get_day(release_date),
                                             date.get_day_of_week(release_date),
 
-                                            release_date, 
                                             album_popularity,
                                             artist_name, 
                                             artist_popularity, 

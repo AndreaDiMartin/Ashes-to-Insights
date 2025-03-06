@@ -70,7 +70,7 @@ filtered_tracks = FOREACH no_null GENERATE  id,
                                             artist_name, 
                                             artist_popularity, 
                                             followers,
-                                            (genre_id IS NOT NULL ? genre_id : 'Unknown') AS genre_id;
+                                            (genre_id != '' ? genre_id : 'Unknown') AS genre_id;
                                             
 
 -- Guardado de los datos

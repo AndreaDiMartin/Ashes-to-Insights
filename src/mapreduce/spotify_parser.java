@@ -39,8 +39,6 @@ public class spotify_parser {
             inputStream = fs.open(path);
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
-            // Skip the header row
-            reader.readLine();
             // Read the rest of the records
             while ((line = reader.readLine()) != null) {
                 // Use a more robust CSV parsing method

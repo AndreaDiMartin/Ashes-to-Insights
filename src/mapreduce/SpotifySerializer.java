@@ -32,7 +32,7 @@ public class SpotifySerializer {
      */
     public static void serializer() throws IOException, CsvValidationException {
         // Paths
-        String CSV_FILE_PATH = "data/tracks-small.csv";
+        String CSV_FILE_PATH = "tracks-small.csv"; //CAMBIAR DESTINO SI ES NECESARIO
         String AVRO_SCHEMA_PATH = "./src/avro/spotify.avsc";
         String PATH = "./outputSerializado/spotify.avro";
 

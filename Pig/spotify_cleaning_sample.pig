@@ -2,7 +2,7 @@ REGISTER 'pig-0.16.0/lib/piggybank.jar';
 REGISTER 'Ashes-to-Insights/get_release_date.py' USING jython AS date;
 
 -- Carga de los datos
-tracks = LOAD 'Ashes-to-Insights/tracks-sample.csv' 
+tracks = LOAD 'tracks.csv' 
 USING org.apache.pig.piggybank.storage.CSVExcelStorage(',','NO_MULTILINE','UNIX','SKIP_INPUT_HEADER') 
 AS (
     id:                 chararray, 
@@ -74,4 +74,4 @@ filtered_tracks = FOREACH no_null GENERATE  id,
                                             
 
 -- Guardado de los datos
-STORE filtered_tracks INTO 'Ashes-to-Insights/tracks-sample-new' USING PigStorage(',');
+STORE filtered_tracks INTO 'tracks-sample-new' USING PigStorage(',');

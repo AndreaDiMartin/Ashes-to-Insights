@@ -23,7 +23,7 @@ import org.apache.hadoop.io.Text;
 
 import com.opencsv.exceptions.CsvValidationException;
 
-import mapreduce.spotify_parser;
+import mapreduce.SpotifyParser;
 
 public class SpotifySerializer {
 

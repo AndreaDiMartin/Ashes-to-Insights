@@ -1,4 +1,4 @@
-package src.mapreduce;
+package mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

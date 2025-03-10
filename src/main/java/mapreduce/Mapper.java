@@ -10,7 +10,7 @@
 //Blues
 //Rap
 
-package src.mapreduce;
+package mapreduce;
 
 public class Mapper {
     

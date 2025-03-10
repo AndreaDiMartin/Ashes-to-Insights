@@ -1,4 +1,4 @@
-package src.mapreduce;
+package mapreduce;
 
 import java.io.BufferedWriter;
 import java.io.File;

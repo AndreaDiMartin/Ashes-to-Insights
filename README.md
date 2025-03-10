@@ -1,2 +1,10 @@
 # Compilación
-Primero hacer ´mvn install´
+Primero hacer
+```bash
+mvn install
+```
+Luego, 
+```bash
+mvn compile
+```
+

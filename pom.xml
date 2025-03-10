@@ -90,7 +90,7 @@
                             <goal>idl-protocol</goal>
                         </goals>
                         <configuration>
-                          <sourceDirectory>${project.basedir}/src/main/mapreduce/</sourceDirectory>
+                          <sourceDirectory>${project.basedir}/src/main/java/</sourceDirectory>
                           <outputDirectory>${project.basedir}/src/main/avro/</outputDirectory>
                         </configuration>
                     </execution>

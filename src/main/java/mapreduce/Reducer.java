@@ -1,4 +1,4 @@
-package src.mapreduce;
+package mapreduce;
 
 public class Reducer {
     

@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class spotify_parser {
+public class SpotifyParser {
 
     /**
      * Parse the records in a text file.

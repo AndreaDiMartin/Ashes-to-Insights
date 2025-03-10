@@ -23,6 +23,8 @@ import org.apache.hadoop.io.Text;
 
 import com.opencsv.exceptions.CsvValidationException;
 
+import mapreduce.spotify_parser;
+
 public class SpotifySerializer {
 
     /**
@@ -55,7 +57,7 @@ public class SpotifySerializer {
         DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(new SpecificDatumWriter<>(schema));
         dataFileWriter.create(schema, fs.create(path));
 
-        NcdcRecordParser parser = new NcdcRecordParser();
+        SpotifyParser parser = new SpotifyParser();
         List<String[]> records = parser.parse(new Text(CSV_FILE_PATH));
 
             // Skip the header row of the CSV file

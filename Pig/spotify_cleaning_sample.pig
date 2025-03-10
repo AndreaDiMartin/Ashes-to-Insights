@@ -42,8 +42,8 @@ AS (
 no_null = FILTER tracks BY release_date IS NOT NULL AND valence IS NOT NULL;
 
 -- Limpieza de las columnas y obtención de los campos de fecha
-filtered_tracks = FOREACH no_null GENERATE  CONCAT(CONCAT('"', REPLACE(id, '"', '\"')), '"') AS id,
-                                            CONCAT(CONCAT('"', REPLACE(track_name, '"', '\"')), '"') AS track_name,
+filtered_tracks = FOREACH no_null GENERATE  CONCAT(CONCAT('"', REPLACE(id, '"', '')), '"') AS id,
+                                            CONCAT(CONCAT('"', REPLACE(track_name, '"', '')), '"') AS track_name,
                                             duration,
                                             explicit,
                                             popularity,
@@ -58,8 +58,8 @@ filtered_tracks = FOREACH no_null GENERATE  CONCAT(CONCAT('"', REPLACE(id, '"', 
                                             tempo,
                                             time_signature,
                                             valence,
-                                            CONCAT(CONCAT('"', REPLACE(album_name, '"', '\"')), '"') AS album_name,
-                                            CONCAT(CONCAT('"', REPLACE(album_type, '"', '\"')), '"') AS album_type,
+                                            CONCAT(CONCAT('"', REPLACE(album_name, '"', '')), '"') AS album_name,
+                                            CONCAT(CONCAT('"', REPLACE(album_type, '"', '')), '"') AS album_type,
 
                                             date.get_year(release_date) AS year,
                                             date.get_month(release_date) AS month,
@@ -67,10 +67,10 @@ filtered_tracks = FOREACH no_null GENERATE  CONCAT(CONCAT('"', REPLACE(id, '"', 
                                             date.get_day_of_week(release_date) AS day_of_week,
 
                                             album_popularity,
-                                            CONCAT(CONCAT('"', REPLACE(artist_name, '"', '\"')), '"') AS artist_name,
+                                            CONCAT(CONCAT('"', REPLACE(artist_name, '"', '')), '"') AS artist_name,
                                             artist_popularity,
                                             followers,
-                                            CONCAT(CONCAT('"', REPLACE((genre_id != '' ? genre_id : 'Unknown'), '"', '\"')), '"') AS genre_id;
+                                            CONCAT(CONCAT('"', REPLACE((genre_id != '' ? genre_id : 'Unknown'), '"', '')), '"') AS genre_id;
                                             
 
 -- Guardado de los datos

@@ -30,13 +30,13 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 
-import classes.avro.Spotify;
+import classes.avro.spotify;
 
 
 public class YearCounterMapRed extends Configured implements Tool{
-   public static class YearCounterMapper extends AvroMapper<Spotify,Pair<Integer,Integer>>{
+   public static class YearCounterMapper extends AvroMapper<spotify,Pair<Integer,Integer>>{
         @Override
-        public void map(Spotify track, AvroCollector<Pair<Integer,Integer>> collector, Reporter reporter)
+        public void map(spotify track, AvroCollector<Pair<Integer,Integer>> collector, Reporter reporter)
         throws IOException{
                 Integer year = track.getYear();
                 collector.collect(new Pair<Integer,Integer>(year,1));
@@ -65,7 +65,7 @@ public class YearCounterMapRed extends Configured implements Tool{
         JobConf conf = new JobConf(getConf(), YearCounterMapRed.class);
         conf.setJobName("YearCounterMapRed");
 
-        java.nio.file.Path outputPath = new Path(args[1]);
+        Path outputPath = new Path(args[1]);
         outputPath.getFileSystem(conf).delete(outputPath, true);
 
         FileInputFormat.setInputPaths(conf, new Path(args[0]));
@@ -74,7 +74,7 @@ public class YearCounterMapRed extends Configured implements Tool{
         AvroJob.setMapperClass(conf, YearCounterMapper.class);
         AvroJob.setReducerClass(conf, YearCounterReducer.class);
 
-        AvroJob.setInputSchema(conf, Spotify.getClassSchema());
+        AvroJob.setInputSchema(conf, spotify.getClassSchema());
         AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),Schema.create(Type.INT)));
 
         JobClient.runJob(conf);
@@ -87,27 +87,6 @@ public class YearCounterMapRed extends Configured implements Tool{
     FileSystem fs = FileSystem.get(conf);
 
     if(res == 0){
-        Path outputdir = new Path(args[1]);
-        FileStatus[] outputfiles = fs.listStatus(outputDir);
-        for(FileStatus outputFile: outputfiles){
-            if(outputFile.getPath().getName().endsWith("avro")){
-                String route = outputFile.getPath().toString().replace("file://", "").replace(".avro",".txt");
-                List<String> records = DeserializationData.getRecords(route);
-                System.out.println("Aqui no funciona");
-          Path outputPath = new Path(route);
-          if (fs.exists(outputPath)) {
-            fs.delete(outputPath, true);
-          }
-          FSDataOutputStream outputStream = fs.create(outputPath);
-          try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"))) {
-            for (String line : records) {
-              writer.write(line.toString());
-              writer.newLine();
-            }
-          }
-
-            }
-        }
         System.out.println("Trabajo terminado con exito");
     } else {
         System.out.println("Trabajo falló");

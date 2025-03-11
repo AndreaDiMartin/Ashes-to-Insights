@@ -34,7 +34,7 @@ import classes.avro.Spotify;
 
 
 public class YearCounterMapRed extends Configured implements Tool{
-   public static class YearCounterMapper extends AvroMapper<Spotify,Pair<Integer,Integer>{
+   public static class YearCounterMapper extends AvroMapper<Spotify,Pair<Integer,Integer>>{
         @Override
         public void map(Spotify track, AvroCollector<Pair<Integer,Integer>> collector, Reporter reporter)
         throws IOException{

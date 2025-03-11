@@ -79,7 +79,7 @@ public class YearCounterMapRed extends Configured implements Tool{
         return 0;
    }
 
-   public static void main(String[] args){
+   public static void main(String[] args) throws Exception{
     int res = ToolRunner.run(new Configuration(), new YearCounterMapRed(), args);
     Configuration conf = new Configuration();
     FileSystem fs = FileSystem.get(conf);

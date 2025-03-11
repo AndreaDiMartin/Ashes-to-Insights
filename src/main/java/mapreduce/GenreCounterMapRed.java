@@ -39,7 +39,7 @@ public class GenreCounterMapRed extends Configured implements Tool{
     public static class GenreCounterMapper extends AvroMapper<spotify, Pair<CharSequence, Integer>> {
         private static final List<String> GENRES = Arrays.asList(
             "hop", "country", "rock", "jazz", "pop", "reggae", "metal", "blues", "rap", "blues", "classical", "house", "folk", "dance",
-            "r&b"
+            "r&b", "indie", "punk", "electronic", "hardcore"
         );
 
         @Override

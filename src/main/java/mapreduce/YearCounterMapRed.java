@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.io.File;
 
 import org.apache.avro.*;
 import org.apache.avro.Schema.Type;
@@ -15,6 +16,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
+import org.apache.commons.io.FileUtils;
+
 
 import classes.avro.spotify;
 

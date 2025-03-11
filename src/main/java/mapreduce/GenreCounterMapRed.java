@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.List;
+import java.io.File;
 
 import org.apache.avro.*;
 import org.apache.avro.Schema.Type;

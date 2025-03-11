@@ -38,7 +38,7 @@ public class YearCounterMapRed extends Configured implements Tool{
         @Override
         public void map(spotify track, AvroCollector<Pair<Integer,Integer>> collector, Reporter reporter)
         throws IOException{
-                Integer year = track.getYear();
+                Integer year = track.getYearOfRelease();
                 collector.collect(new Pair<Integer,Integer>(year,1));
 
         }

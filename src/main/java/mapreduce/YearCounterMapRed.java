@@ -82,7 +82,14 @@ public class YearCounterMapRed extends Configured implements Tool{
    public static void main(String[] args) throws Exception {
     int res = ToolRunner.run(new Configuration(), new YearCounterMapRed(), args);
     Configuration conf = new Configuration();
-    FileSystem fs = FileSystem.get(conf);
+    FileSystem fs = null;
+
+    try {
+            fs = FileSystem.get(conf);
+        } catch (IOException e) {
+            System.err.println("Error getting FileSystem: " + e.getMessage());
+            System.exit(1);
+        }
 
     if(res == 0){
         System.out.println("Trabajo terminado con exito");

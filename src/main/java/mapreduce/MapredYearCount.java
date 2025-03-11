@@ -1,4 +1,4 @@
-package com.mapreduce.avro;
+package mapreduce;
 
 import java.io.IOException;
 
@@ -115,7 +115,7 @@ public class MapredYearCount extends Configured implements Tool {
       for (File outputFile : outputFiles) {
         if (outputFile.getName().endsWith(".avro")) {
           String textName = outputFile.getName().replace(".avro", ".txt");
-          List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath());
+          List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "int");
           File textFile = new File(outputFile.getParent(), textName);
           FileUtils.writeLines(textFile, records);
         }

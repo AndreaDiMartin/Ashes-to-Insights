@@ -44,7 +44,7 @@ public class YearCounterMapRed extends Configured implements Tool{
    
    public static class YearCounterReducer extends AvroReducer<Integer, Integer, Pair<Integer,Integer>>{
     @Override 
-    public void reduce(Integer key, Iterable<Integer> values, AvroCollector<Pair<Integer,Integer>> collector, Reporter reporter){
+    public void reduce(Integer key, Iterable<Integer> values, AvroCollector<Pair<Integer,Integer>> collector, Reporter reporter) throws IOException{
         int sum = 0;
         for (Integer value: values){
             sum += value;
@@ -79,17 +79,11 @@ public class YearCounterMapRed extends Configured implements Tool{
         return 0;
    }
 
-   public static void main(String[] args) throws Exception {
+   public static void main(String[] args){
     int res = ToolRunner.run(new Configuration(), new YearCounterMapRed(), args);
     Configuration conf = new Configuration();
-    FileSystem fs = null;
+    FileSystem fs = FileSystem.get(conf);
 
-    try {
-            fs = FileSystem.get(conf);
-        } catch (IOException e) {
-            System.err.println("Error getting FileSystem: " + e.getMessage());
-            System.exit(1);
-        }
 
     if(res == 0){
         System.out.println("Trabajo terminado con exito");

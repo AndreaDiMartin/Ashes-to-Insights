@@ -110,6 +110,16 @@ public class MapredYearCount extends Configured implements Tool {
     int res = ToolRunner.run(new Configuration(), new MapredYearCount(), args);
 
     if (res == 0) {
+      File outputDir = new File(args[1]);
+      File[] outputFiles = outputDir.listFiles();
+      for (File outputFile : outputFiles) {
+        if (outputFile.getName().endsWith(".avro")) {
+          String textName = outputFile.getName().replace(".avro", ".txt");
+          List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath());
+          File textFile = new File(outputFile.getParent(), textName);
+          FileUtils.writeLines(textFile, records);
+        }
+      }
       System.out.println("Job executed successfully");
     } else {
       System.out.println("Job failed");

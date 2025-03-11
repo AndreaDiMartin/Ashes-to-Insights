@@ -17,9 +17,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
-import javax.tools.Tool;
-import javax.xml.validation.Schema;
-
 import org.apache.avro.*;
 import org.apache.avro.Schema.Type;
 import org.apache.avro.mapred.*;

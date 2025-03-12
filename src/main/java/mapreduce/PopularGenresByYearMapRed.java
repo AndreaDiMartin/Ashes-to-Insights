@@ -52,19 +52,19 @@ public class PopularGenresByYearMapRed extends Configured implements Tool {
         }
     }
 */
-    public static class PopularGenresByYearCounterReducer extends AvroReducer<Integer, CharSequence, Pair<Integer, CharSequence[]>> {
-        @Override
-        public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence[]>> collector, Reporter reporter)
-                throws IOException {
-            List<CharSequence> genres = new ArrayList<CharSequence>();
-            System.out.println("--------Año--------: "+ key);
-            for (CharSequence value : values) {
-                genres.add(value);
-                System.out.println(value);
-            }
-            collector.collect(new Pair<Integer, CharSequence[]>(key, genres));
+public static class PopularGenresByYearCounterReducer extends AvroReducer<Integer, CharSequence, Pair<Integer, List<CharSequence>>> {
+    @Override
+    public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, List<CharSequence>>> collector, Reporter reporter)
+            throws IOException {
+        List<CharSequence> genres = new ArrayList<CharSequence>();
+        System.out.println("--------Año--------: " + key);
+        for (CharSequence value : values) {
+            genres.add(value);
+            System.out.println(value);
         }
+        collector.collect(new Pair<Integer, List<CharSequence>>(key, genres));
     }
+}
 
     public int run(String[] args) throws Exception {
         if(args.length != 2){

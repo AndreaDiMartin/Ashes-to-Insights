@@ -62,7 +62,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool {
                 genres.add(value);
                 System.out.println(value);
             }
-            collector.collect(new Pair<Integer, CharSequence[]>(key, genres.toArray()));
+            collector.collect(new Pair<Integer, CharSequence[]>(key, genres));
         }
     }
 

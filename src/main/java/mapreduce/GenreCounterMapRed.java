@@ -69,7 +69,7 @@ public class GenreCounterMapRed extends Configured implements Tool{
 
      public int run(String[] args) throws Exception {
         if(args.length != 2){
-            System.err.println("Usage: YearCounterMapRed <input path> <output path>");
+            System.err.println("Usage: GenreCounterMapRed <input path> <output path>");
             return -1;
         }
 

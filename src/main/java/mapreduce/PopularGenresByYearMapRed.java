@@ -92,7 +92,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception{
-        int res = ToolRunner.run(new Configuration(), new GenreCounterMapRed(), args);
+        int res = ToolRunner.run(new Configuration(), new PopularGenresByYearMapRed(), args);
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
     

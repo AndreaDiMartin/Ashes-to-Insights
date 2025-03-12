@@ -52,9 +52,9 @@ public class PopularGenresByYearMapRed extends Configured implements Tool {
         }
     }
 */
-public static class PopularGenresByYearCounterReducer extends AvroReducer<Integer, CharSequence, Pair<Integer, List<CharSequence>>> {
+public static class PopularGenresByYearCounterReducer extends AvroReducer<Integer, CharSequence, Pair<Integer, CharSequence>>{
     @Override
-    public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, List<CharSequence>>> collector, Reporter reporter)
+    public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
             throws IOException {
         List<CharSequence> genres = new ArrayList<CharSequence>();
         System.out.println("--------Año--------: " + key);
@@ -62,7 +62,7 @@ public static class PopularGenresByYearCounterReducer extends AvroReducer<Intege
             genres.add(value);
             System.out.println(value);
         }
-        collector.collect(new Pair<Integer, List<CharSequence>>(key, genres));
+        collector.collect(new Pair<Integer, CharSequence>(key, genres.toString()));
     }
 }
 
@@ -85,8 +85,7 @@ public static class PopularGenresByYearCounterReducer extends AvroReducer<Intege
         AvroJob.setReducerClass(conf, PopularGenresByYearCounterReducer.class);
 
         AvroJob.setInputSchema(conf, spotify.getClassSchema());
-        Schema arraySchema = Schema.createArray(Schema.create(Type.STRING));
-        AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),arraySchema));
+        AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),Schema.create(Type.STRING)));
 
         JobClient.runJob(conf);
         return 0;

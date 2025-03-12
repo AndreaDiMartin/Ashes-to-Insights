@@ -21,7 +21,7 @@ import org.apache.hadoop.util.*;
 
 
 public class PopularGenresByYear extends Configured implements Tool {
-    private Schema genreYear = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"genreYear\",\"fields\":[{\"name\":\"year\",\"type\":\"int\"},{\"name\":\"genre\",\"type\":\"string\"}]}");
+    private Schema genreYear = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"genreYear\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"string\"}]}");
     public static class PopularGenresMapper extends AvroMapper<Schema, Pair<CharSequence, Integer>> {
         @Override
         public void map(Schema genreYear, AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)

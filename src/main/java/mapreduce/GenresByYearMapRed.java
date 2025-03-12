@@ -65,16 +65,13 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
     @Override
     public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
             throws IOException {
-        List<CharSequence> genres = new ArrayList<CharSequence>();
+        //List<CharSequence> genres = new ArrayList<CharSequence>();
         System.out.println("--------Año--------: " + key);
-        for (CharSequence value : values) {
-            genres.add(value);
-            //System.out.println(value);
-        }
-        for (CharSequence genre : genres) {
-            System.out.println(genre);
-        }
-        collector.collect(new Pair<Integer, CharSequence>(key, genres.toString()));
+        //genres.addAll(values);
+        //for (CharSequence genre : genres) {
+          //  System.out.println(genre);
+        //}
+        collector.collect(new Pair<Integer, CharSequence>(key, values.toString()));
     }
 }
 

@@ -62,7 +62,7 @@ public static class PopularGenresByYearCounterReducer extends AvroReducer<Intege
             genres.add(value);
             System.out.println(value);
         }
-        collector.collect(new Pair<Integer, List<CharSequence>>(key, genres));
+        collector.collect(new Pair<Integer, List<CharSequence>>(key, genres.toArray()));
     }
 }
 
@@ -85,7 +85,7 @@ public static class PopularGenresByYearCounterReducer extends AvroReducer<Intege
         AvroJob.setReducerClass(conf, PopularGenresByYearCounterReducer.class);
 
         AvroJob.setInputSchema(conf, spotify.getClassSchema());
-        Schema arraySchema = Schema.create(Type.STRING);
+        Schema arraySchema = Schema.createArray(Schema.create(Type.STRING));
         AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),arraySchema));
 
         JobClient.runJob(conf);

@@ -44,7 +44,7 @@ public class DeserializationData {
                 Pair<Integer, Integer> pair = new Pair<>(record.get("key"), record.get("value"));
                 // Imprimir el par clave-valor en la consola
                 records.add(pair.toString());
-                System.out.println(pair.toString());
+               // System.out.println(pair.toString());
             }
 
             // Cerrar el lector de archivos
@@ -94,7 +94,7 @@ public class DeserializationData {
                 Pair<Integer, CharSequence> pair = new Pair<>(record.get("key"), record.get("value"));
                 // Imprimir el par clave-valor en la consola
                 records.add(pair.toString());
-                System.out.println(pair.toString());
+               // System.out.println(pair.toString());
             }
 
             // Cerrar el lector de archivos

@@ -33,7 +33,7 @@ public class GenresByYearMapRed extends Configured implements Tool {
     public static class GenresByYearMapper extends AvroMapper<spotify, Pair<Integer, CharSequence>> {
         private static final List<String> GENRES = Arrays.asList(
             "hop", "country", "rock", "jazz", "pop", "reggae", "metal", "blues", "rap", "blues", "classical", "house", "folk", "dance",
-            "r&b", "indie", "punk", "electronic", "hardcore"
+            "r&b", "indie", "punk", "electronic", "hardcore", "trap"
         );
         @Override
         public void map(spotify track, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
@@ -69,7 +69,10 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
         System.out.println("--------Año--------: " + key);
         for (CharSequence value : values) {
             genres.add(value);
-            System.out.println(value);
+            //System.out.println(value);
+        }
+        for (CharSequence genre : genres) {
+            System.out.println(genre);
         }
         collector.collect(new Pair<Integer, CharSequence>(key, genres.toString()));
     }

@@ -85,7 +85,8 @@ public class PopularGenresByYearMapRed extends Configured implements Tool {
         AvroJob.setReducerClass(conf, PopularGenresByYearCounterReducer.class);
 
         AvroJob.setInputSchema(conf, spotify.getClassSchema());
-        AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),Schema.create(Type.ARRAY)));
+        Schema arraySchema = Schema.create(Type.STRING);
+        AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),arraySchema));
 
         JobClient.runJob(conf);
         return 0;

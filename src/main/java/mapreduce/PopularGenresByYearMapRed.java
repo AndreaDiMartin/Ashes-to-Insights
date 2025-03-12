@@ -62,7 +62,7 @@ public static class PopularGenresByYearCounterReducer extends AvroReducer<Intege
             genres.add(value);
             System.out.println(value);
         }
-        collector.collect(new Pair<Integer, List<CharSequence>>(key, genres.toArray()));
+        collector.collect(new Pair<Integer, List<CharSequence>>(key, genres));
     }
 }
 

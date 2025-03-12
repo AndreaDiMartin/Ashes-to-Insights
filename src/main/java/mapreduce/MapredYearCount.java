@@ -115,7 +115,7 @@ public class MapredYearCount extends Configured implements Tool {
       for (File outputFile : outputFiles) {
         if (outputFile.getName().endsWith(".avro")) {
           String textName = outputFile.getName().replace(".avro", ".txt");
-          List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "int");
+          List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "int", "int");
           File textFile = new File(outputFile.getParent(), textName);
           FileUtils.writeLines(textFile, records);
         }

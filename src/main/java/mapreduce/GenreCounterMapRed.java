@@ -104,7 +104,7 @@ public class GenreCounterMapRed extends Configured implements Tool{
         for (File outputFile : outputFiles) {
             if (outputFile.getName().endsWith(".avro")) {
             String textName = outputFile.getName().replace(".avro", ".txt");
-            List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "string");
+            List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "string", "int");
             File textFile = new File(outputFile.getParent(), textName);
             FileUtils.writeLines(textFile, records);
             }

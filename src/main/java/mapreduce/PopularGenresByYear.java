@@ -52,7 +52,7 @@ public class PopularGenresByYear extends Configured implements Tool {
             return -1;
         }
         JobConf conf = new JobConf(getConf(), PopularGenresByYear.class);
-        conf.setJobName("PopularGenresByYear");
+        conf.setJobName("PopularGenresByYearMapRed");
 
         Path outputPath = new Path(args[1]);
         outputPath.getFileSystem(conf).delete(outputPath, true);
@@ -71,7 +71,7 @@ public class PopularGenresByYear extends Configured implements Tool {
     }
 
     public static void main(String[] args) throws Exception{
-        int res = ToolRunner.run(new Configuration(), new GenresByYearMapRed(), args);
+        int res = ToolRunner.run(new Configuration(), new PopularGenresByYear(), args);
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
     

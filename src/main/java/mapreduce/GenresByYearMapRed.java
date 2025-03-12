@@ -66,10 +66,10 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
     public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
             throws IOException {
         List<CharSequence> genres = new ArrayList<CharSequence>();
-        //System.out.println("--------Año--------: " + key);
+        System.out.println("--------Año--------: " + key);
         for (CharSequence value : values) {
             genres.add(value);
-          //  System.out.println(value);
+            System.out.println(value);
         }
         collector.collect(new Pair<Integer, CharSequence>(key, genres.toString()));
     }
@@ -90,7 +90,6 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
         AvroJob.setMapperClass(conf, GenresByYearMapper.class);
-        //AvroJob.setMapperClass(conf, PopularGenresByYearMapper.class);
         AvroJob.setReducerClass(conf, GenresByYearReducer.class);
 
         AvroJob.setInputSchema(conf, spotify.getClassSchema());

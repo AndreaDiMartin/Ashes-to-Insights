@@ -74,7 +74,7 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
         //for (CharSequence genre : genres) {
           //  System.out.println(genre);
         //}
-        collector.collect(new Pair<Integer, CharSequence>(key, genres.toString()));
+        collector.collect(new Pair<Integer, CharSequence>(key, genres));
     }
 }
 

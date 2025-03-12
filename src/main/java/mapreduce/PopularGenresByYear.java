@@ -9,6 +9,7 @@ import java.io.File;
 
 import org.apache.avro.*;
 import org.apache.avro.Schema.Type;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.mapred.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.*;
@@ -16,19 +17,19 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.GenericWritable;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 
 
 public class PopularGenresByYear extends Configured implements Tool {
     private Schema genreYear = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"genreYear\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"string\"}]}");
-    public static class PopularGenresMapper extends AvroMapper<Schema, Pair<CharSequence, Integer>> {
+    public static class PopularGenresMapper extends AvroMapper<GenericRecord, Pair<CharSequence, Integer>> {
         @Override
-        public void map(Schema genreYear, AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
+        public void map(GenericRecord record,AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
                 throws IOException {
-            
-            String year = genreYear.getFields().get(0).toString();
-            String genre = genreYear.getFields().get(1).toString();
+            String year = record.get("key").toString();
+            String genre = record.get("value").toString();
             collector.collect(new Pair<CharSequence, Integer>(year+"-"+genre, 1));
         
         }

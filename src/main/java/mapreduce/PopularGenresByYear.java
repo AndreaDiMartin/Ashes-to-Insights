@@ -24,8 +24,6 @@ import org.apache.hadoop.util.*;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 
-import mapreduce.CompositeKey;
-
 
 public class PopularGenresByYear extends Configured implements Tool {
     private Schema genreYear = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"genreYear\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"string\"}]}");
@@ -37,8 +35,7 @@ public class PopularGenresByYear extends Configured implements Tool {
             String[] listOfGenres = record.get("value").toString().split(", ");
             for(String genre: listOfGenres){
                 if(!genre.trim().isEmpty()){
-                    CompositeKey compositeKey = new CompositeKey(year + "-" + genre, 1);
-                    collector.collect(new Pair<CharSequence, Integer>(compositeKey.toString(), 1));
+                    collector.collect(new Pair<CharSequence, Integer>(year + " - " + genre, 1));
                 }
             }
         
@@ -54,19 +51,6 @@ public class PopularGenresByYear extends Configured implements Tool {
                 sum += value;
             }
             collector.collect(new Pair<>(key, sum));
-        }
-    }
-
-    public static class CompositeKeyComparator extends WritableComparator {
-        protected CompositeKeyComparator() {
-            super(CompositeKey.class, true);
-        }
-    
-        @Override
-        public int compare(WritableComparable w1, WritableComparable w2) {
-            CompositeKey k1 = (CompositeKey) w1;
-            CompositeKey k2 = (CompositeKey) w2;
-            return k1.compareTo(k2);
         }
     }
 
@@ -89,9 +73,7 @@ public class PopularGenresByYear extends Configured implements Tool {
 
         AvroJob.setInputSchema(conf, genreYear);
         AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.STRING),Schema.create(Type.INT)));
-
-        conf.setOutputKeyComparatorClass(CompositeKeyComparator.class);
-
+        
         JobClient.runJob(conf);
         return 0;
     }

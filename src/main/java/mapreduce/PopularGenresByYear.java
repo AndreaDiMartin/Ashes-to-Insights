@@ -29,31 +29,31 @@ import mapreduce.CompositeKey;
 
 public class PopularGenresByYear extends Configured implements Tool {
     private Schema genreYear = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"genreYear\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"string\"}]}");
-    public static class PopularGenresMapper extends AvroMapper<GenericRecord, Pair<CharSequence, IntWritable>> {
+    public static class PopularGenresMapper extends AvroMapper<GenericRecord, Pair<CharSequence, Integer>> {
         @Override
-        public void map(GenericRecord record,AvroCollector<Pair<CharSequence, IntWritable>> collector, Reporter reporter)
+        public void map(GenericRecord record,AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
                 throws IOException {
             String year = record.get("key").toString();
             String[] listOfGenres = record.get("value").toString().split(", ");
             for(String genre: listOfGenres){
                 if(!genre.trim().isEmpty()){
                     CompositeKey compositeKey = new CompositeKey(year + "-" + genre, 1);
-                    collector.collect(new Pair<CharSequence, IntWritable>(compositeKey.toString(), new IntWritable(1)));
+                    collector.collect(new Pair<CharSequence, Integer>(compositeKey.toString(), 1));
                 }
             }
         
         }
     }
 
-    public static class PopularGenresReducer extends AvroReducer<CharSequence, IntWritable, Pair<CharSequence, IntWritable>>{
+    public static class PopularGenresReducer extends AvroReducer<CharSequence, Integer, Pair<CharSequence, Integer>>{
         @Override
-        public void reduce(CharSequence key, Iterable<IntWritable> values, AvroCollector<Pair<CharSequence, IntWritable>> collector, Reporter reporter)
+        public void reduce(CharSequence key, Iterable<Integer> values, AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
                 throws IOException {
             int sum = 0;
-            for (IntWritable value: values){
-                sum += value.get();
+            for (Integer value: values){
+                sum += value;
             }
-            collector.collect(new Pair<>(key, new IntWritable(sum)));
+            collector.collect(new Pair<>(key, sum));
         }
     }
 

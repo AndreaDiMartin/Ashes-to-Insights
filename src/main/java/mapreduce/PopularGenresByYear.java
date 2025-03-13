@@ -18,36 +18,55 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.GenericWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.WritableComparator;
+
+import mapreduce.CompositeKey;
 
 
 public class PopularGenresByYear extends Configured implements Tool {
     private Schema genreYear = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"genreYear\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"string\"}]}");
-    public static class PopularGenresMapper extends AvroMapper<GenericRecord, Pair<CharSequence, Integer>> {
+    public static class PopularGenresMapper extends AvroMapper<GenericRecord, Pair<CompositeKey, IntWritable>> {
         @Override
-        public void map(GenericRecord record,AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
+        public void map(GenericRecord record,AvroCollector<Pair<CompositeKey, IntWritable>> collector, Reporter reporter)
                 throws IOException {
             String year = record.get("key").toString();
             String[] listOfGenres = record.get("value").toString().split(", ");
             for(String genre: listOfGenres){
-                if(genre != ""){
-                    collector.collect(new Pair<CharSequence, Integer>(year+" - "+genre, 1));
+                if(!genre.trim().isEmpty()){
+                    CompositeKey compositeKey = new CompositeKey(year + "-" + genre, 1);
+                    collector.collect(new Pair<CompositeKey, IntWritable>(compositeKey, new IntWritable(1)));
                 }
             }
         
         }
     }
 
-    public static class PopularGenresReducer extends AvroReducer<CharSequence, Integer, Pair<CharSequence, Integer>>{
+    public static class PopularGenresReducer extends AvroReducer<CompositeKey, IntWritable, Pair<CompositeKey, IntWritable>>{
         @Override
-        public void reduce(CharSequence key, Iterable<Integer> values, AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
+        public void reduce(CompositeKey key, Iterable<IntWritable> values, AvroCollector<Pair<CompositeKey, IntWritable>> collector, Reporter reporter)
                 throws IOException {
-            Integer sum = 0;
-            for (Integer value: values){
-                sum += value;
+            int sum = 0;
+            for (IntWritable value: values){
+                sum += value.get();
             }
-            collector.collect(new Pair<CharSequence, Integer>(key, sum));
+            collector.collect(new Pair<>(key, new IntWritable(sum)));
+        }
+    }
+
+    public class CompositeKeyComparator extends WritableComparator {
+        protected CompositeKeyComparator() {
+            super(CompositeKey.class, true);
+        }
+    
+        @Override
+        public int compare(WritableComparable w1, WritableComparable w2) {
+            CompositeKey k1 = (CompositeKey) w1;
+            CompositeKey k2 = (CompositeKey) w2;
+            return k1.compareTo(k2);
         }
     }
 
@@ -70,6 +89,8 @@ public class PopularGenresByYear extends Configured implements Tool {
 
         AvroJob.setInputSchema(conf, genreYear);
         AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.STRING),Schema.create(Type.INT)));
+
+        conf.setOutputKeyComparatorClass(CompositeKeyComparator.class);
 
         JobClient.runJob(conf);
         return 0;

@@ -29,8 +29,12 @@ public class PopularGenresByYear extends Configured implements Tool {
         public void map(GenericRecord record,AvroCollector<Pair<CharSequence, Integer>> collector, Reporter reporter)
                 throws IOException {
             String year = record.get("key").toString();
-            String genre = record.get("value").toString();
-            collector.collect(new Pair<CharSequence, Integer>(year+"-"+genre, 1));
+            String[] listOfGenres = record.get("value").toString().split(", ");
+            for(String genre: listOfGenres){
+                if(genre != ""){
+                    collector.collect(new Pair<CharSequence, Integer>(year+" - "+genre, 1));
+                }
+            }
         
         }
     }

@@ -57,7 +57,7 @@ public class PopularGenresByYear extends Configured implements Tool {
         }
     }
 
-    public class CompositeKeyComparator extends WritableComparator {
+    public static class CompositeKeyComparator extends WritableComparator {
         protected CompositeKeyComparator() {
             super(CompositeKey.class, true);
         }

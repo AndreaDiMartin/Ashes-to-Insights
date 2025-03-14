@@ -45,7 +45,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
             int count = Integer.parseInt(countSplit[1]);
             int year = Integer.parseInt(yearGenre[0]);
             String genre = yearGenre[1];
-            System.out.println(year);
+            //System.out.println(year);
             context.write(new IntPair(year,count), new Text(genre));
             }
             }
@@ -84,7 +84,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
             if(cmp != 0){
                 return cmp;
             }
-            return -IntPair.compare(ip1.getSecond(), ip2.getFirst());
+            return -IntPair.compare(ip1.getSecond(), ip2.getSecond());
         }
     }
 

@@ -1,10 +1,6 @@
 package mapreduce;
 
-
-//Mapear tracks con key = Año y Value = Género
-//Mapear Género y reducir al contar cuántos hay (por año)
-//Sortear o seleccionar aquellos con las cuentas más altas (Top 5)
-//Buscar que otra cosa se puede hacer con los géneros?????
+//Parte 1 - Generos mas populares por año
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

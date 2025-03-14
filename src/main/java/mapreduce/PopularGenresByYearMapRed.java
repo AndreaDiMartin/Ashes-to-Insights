@@ -30,9 +30,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import mapreduce.IntPair;
 
 public class PopularGenresByYearMapRed extends Configured implements Tool{
-    public class PopularGenresByYearMapper extends Mapper<LongWritable, Text, IntPair, Text>{
+    static class PopularGenresByYearMapper extends Mapper<LongWritable, Text, IntPair, Text>{
         @Override
-        public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
             String line = value.toString();
             line = line.substring(1, line.length() - 1);
             String[] parts = line.split(", ");
@@ -47,9 +47,9 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
     }
 
 
-    public class PopularGenresByYearReducer extends Reducer<IntPair, Text, IntPair, Text>{
+    static class PopularGenresByYearReducer extends Reducer<IntPair, Text, IntPair, Text>{
         @Override
-        public void reduce(IntPair key,Iterable<Text> values, Context context) throws IOException, InterruptedException{
+        protected void reduce(IntPair key,Iterable<Text> values, Context context) throws IOException, InterruptedException{
             String genreList = "";
             for(Text genre: values){
                 genreList = genre + "-";

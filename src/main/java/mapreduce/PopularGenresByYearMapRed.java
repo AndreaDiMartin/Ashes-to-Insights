@@ -34,6 +34,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
             String line = value.toString();
+            if(!line.isEmpty()){
             line = line.substring(1, line.length() - 1);
             String[] parts = line.split(", ");
             // Extract the key and value
@@ -44,6 +45,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
             String genre = yearGenre[1];
             //Parser
             context.write(new IntPair(year,count), new Text(genre));
+            }
         }
     }
 
@@ -101,7 +103,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
         }
         Configuration conf = getConf();
         
-        Job job = Job.getInstance(conf, "PopularGenresByYearMapRed");
+        Job job = Job.getInstance(conf, "PopularGenresByYearSSMapRed");
         //job.setJarByClass(PopularGenresByYearMapRed.class);
         
     //    job.setJobName("PopularGenresByYearMapRed");

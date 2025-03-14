@@ -20,5 +20,6 @@ public class MostPopularGenreByYearMain {
         FinalPaths[0] = SecondPaths[1];
         FinalPaths[1] = lastInput;
         SortPopularGenresByYearMapRed.main(FinalPaths);
+        System.exit(0);
     }
 }

@@ -109,7 +109,7 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
         } else {
             System.out.println("Trabajo falló - GenresByYearMapRed");
         }
-        System.exit(res);
+        //System.exit(res);
     }
 
     

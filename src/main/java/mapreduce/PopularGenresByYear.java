@@ -97,9 +97,9 @@ public class PopularGenresByYear extends Configured implements Tool {
                 FileUtils.writeLines(textFile, records);
                 }
             }
-            System.out.println("Trabajo terminado con exito");
+            System.out.println("Trabajo terminado con exito - PopularGenresByYear");
         } else {
-            System.out.println("Trabajo falló");
+            System.out.println("Trabajo falló - PopularGenresByYear");
         }
         System.exit(res);
     }

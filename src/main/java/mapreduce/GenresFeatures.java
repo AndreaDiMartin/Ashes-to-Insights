@@ -45,9 +45,9 @@ public class GenresFeatures extends Configured implements Tool{
                 Float energy = (Float) track.getEnergy();
                 Float loudness = (Float) track.getLoudness();
                 Float valence = (Float) track.getValence(); 
-                Float accousticness = (Float) track.getAcousticness();
+                Float acousticness = (Float) track.getAcousticness();
                 //POPULARIDAD????
-                collector.collect(new Pair<Integer, CharSequence>(year, genre_id + "/" + explicit.toString() + "/" + energy.toString() + "/" + loudness.toString() + "/" + valence.toString()));
+                collector.collect(new Pair<Integer, CharSequence>(year, genre_id + "/" + explicit.toString() + "/" + energy.toString() + "/" + loudness.toString() + "/" + valence.toString() + "/" + acousticness.toString()));
                 
             }
         }
@@ -61,6 +61,7 @@ public static class GenresFeatureReducer extends AvroReducer<Integer, CharSequen
         Float energyMean = 0.0f;
         Float loudnessMean = 0.0f;
         Float valenceMean = 0.0f; 
+        Float acousticnessMean = 0.0f;
         CharSequence genre = "";
         Integer num = 0;        
         for (CharSequence value : values) {
@@ -69,6 +70,7 @@ public static class GenresFeatureReducer extends AvroReducer<Integer, CharSequen
             energyMean += Float.parseFloat(features[2]);
             loudnessMean += Float.parseFloat(features[3]);
             valenceMean += Float.parseFloat(features[4]);
+            acousticnessMean += Float.parseFloat(features[5]);
             num += 1;
             genre = features[0];
         }
@@ -78,8 +80,8 @@ public static class GenresFeatureReducer extends AvroReducer<Integer, CharSequen
             loudnessMean /= num;
             valenceMean /= num;
         }
-        System.out.println(loudnessMean);
-        collector.collect(new Pair<Integer, CharSequence>(key, genre + "-" + explicitMean.toString() + "-" + energyMean.toString() + "-"  + loudnessMean.toString() + "-" + valenceMean.toString()));
+       // System.out.println(loudnessMean);
+        collector.collect(new Pair<Integer, CharSequence>(key, genre + "/" + explicitMean.toString() + "/" + energyMean.toString() + "/"  + loudnessMean.toString() + "/" + valenceMean.toString() + "/" + acousticnessMean.toString()));
     }
 }
 

@@ -31,7 +31,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import mapreduce.IntPair;
 
-public class PopularGenresByYearMapRed extends Configured implements Tool{
+public class SortPopularGenresByYearMapRed extends Configured implements Tool{
     static class PopularGenresByYearMapper extends Mapper<LongWritable, Text, IntPair, Text>{
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
@@ -132,7 +132,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
     }
 
     public static void main(String[] args) throws Exception{
-        int exitCode = ToolRunner.run(new PopularGenresByYearMapRed(), args);
+        int exitCode = ToolRunner.run(new SortPopularGenresByYearMapRed(), args);
         System.exit(exitCode);
     }
 

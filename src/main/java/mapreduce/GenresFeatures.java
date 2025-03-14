@@ -45,8 +45,9 @@ public class GenresFeatures extends Configured implements Tool{
                 Float energy = (Float) track.getEnergy();
                 Float loudness = (Float) track.getLoudness();
                 Float valence = (Float) track.getValence(); 
+                Float accousticness = (Float) track.getAcousticness();
                 //POPULARIDAD????
-                collector.collect(new Pair<Integer, CharSequence>(year, genre_id + "-" + explicit.toString() + "-" + energy.toString() + "-" + loudness.toString() + "-" + valence.toString()));
+                collector.collect(new Pair<Integer, CharSequence>(year, genre_id + "/" + explicit.toString() + "/" + energy.toString() + "/" + loudness.toString() + "/" + valence.toString()));
                 
             }
         }
@@ -64,7 +65,7 @@ public static class GenresFeatureReducer extends AvroReducer<Integer, CharSequen
         Integer num = 0;        
         for (CharSequence value : values) {
             System.out.println(key.toString() + " " + value);
-            String[] features = value.toString().split("-");
+            String[] features = value.toString().split("/");
             explicitMean += Float.parseFloat(features[1]);
             energyMean += Float.parseFloat(features[2]);
             loudnessMean += Float.parseFloat(features[3]);

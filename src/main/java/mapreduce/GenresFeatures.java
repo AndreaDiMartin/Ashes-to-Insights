@@ -64,7 +64,6 @@ public static class GenresFeatureReducer extends AvroReducer<Integer, CharSequen
         CharSequence genre = "";
         Integer num = 0;        
         for (CharSequence value : values) {
-            System.out.println(key.toString() + " " + value);
             String[] features = value.toString().split("/");
             explicitMean += Float.parseFloat(features[1]);
             energyMean += Float.parseFloat(features[2]);
@@ -79,6 +78,7 @@ public static class GenresFeatureReducer extends AvroReducer<Integer, CharSequen
             loudnessMean /= num;
             valenceMean /= num;
         }
+        System.out.println(valenceMean);
         collector.collect(new Pair<Integer, CharSequence>(key, genre + "-" + explicitMean.toString() + "-" + energyMean.toString() + "-"  + loudnessMean.toString() + "-" + valenceMean.toString()));
     }
 }

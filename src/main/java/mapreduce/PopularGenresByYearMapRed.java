@@ -37,6 +37,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
             line = line.substring(1, line.length() - 1);
             String[] parts = line.split(", ");
             // Extract the key and value
+            if(parts.length > 1){
             String[] yearGenreSplit = parts[0].split(": ");
             String[] countSplit = parts[1].split(": ");
             if(yearGenreSplit.length>1 && countSplit.length > 1){
@@ -44,8 +45,9 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
             int count = Integer.parseInt(countSplit[1]);
             int year = Integer.parseInt(yearGenre[0]);
             String genre = yearGenre[1];
-            //System.out.println();
+            System.out.println(year);
             context.write(new IntPair(year,count), new Text(genre));
+            }
             }
             
         }

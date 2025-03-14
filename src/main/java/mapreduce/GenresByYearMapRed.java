@@ -40,7 +40,7 @@ public class GenresByYearMapRed extends Configured implements Tool {
                 throws IOException {
             
             Integer year = track.getYearOfRelease();
-            if(year != null){
+            if(year != null && year > 1){
                 CharSequence genre = track.getGenreId();
                 String[] genreSplit = genre.toString().split(" ");
                 String mainGenre = genreSplit[genreSplit.length - 1];

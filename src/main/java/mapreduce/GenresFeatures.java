@@ -32,7 +32,7 @@ public class GenresFeatures extends Configured implements Tool{
         @Override
         public void map(spotify track, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
         throws IOException {
-            String genreToSelect = "Pop";
+            String genreToSelect = "pop";
             Integer year = track.getYearOfRelease();
             CharSequence genre_id = track.getGenreId(); 
             String[] genreSplit = genre_id.toString().split(" ");

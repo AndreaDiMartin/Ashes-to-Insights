@@ -84,7 +84,7 @@ public class PopularGenresByYearMapRed extends Configured implements Tool{
             if(cmp != 0){
                 return cmp;
             }
-            return -IntPair.compare(ip1.getSecond(), ip2.getSecond());
+            return IntPair.compare(ip1.getSecond(), ip2.getSecond());
         }
     }
 

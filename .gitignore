@@ -1,2 +1,15 @@
 # Ignore build directories
 /target/
+
+
+# Ignorar las carpetas con las salidas de los MapReduce
+output*
+yearCountTest
+
+# Ignorar los archivos con informacion del dataset
+tracks-sample-clean
+tracks-sample-clean.csv
+tracks-sample.csv
+
+# Ignorar codigo generado de los esquemas
+src/main/java/classes/avro

@@ -25,13 +25,19 @@ import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import classes.avro.spotify;
+import classes.avro.spotify; 
 
 public class TrackWordCount extends Configured implements Tool {
 
   public static class TrackMapper extends AvroMapper<spotify, Pair<String, Integer>> {
       private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList(
-          "i", "you", "your", "she", "her", "he", "his", "they", "their", "we", "our", "it", "is", "are", "the", "a"
+          "i", "you", "your", "she", "her", "he", "his", "they", "their", "we", "our", "it", "is", "are", "the", "a",
+          "an", "and", "but", "or", "for", "to", "of", "in", "on", "at", "with", "by", "this", "that", "these", "those",
+          "as", "if", "than", "then", "when", "where", "while", "who", "what", "which", "why", "how", "not", "no", "yes",
+          "all", "some", "more", "most", "like", "about", "over", "here", "there", "now", "then",
+          "yo", "tu", "el", "ella", "nosotros", "ellos", "ellas", "mi", "tu", "su", "nuestro","este", "ese", "aquel", "esto", 
+          "eso", "a", "de", "en", "con", "por", "para", "sin", "mas", "menos", "como", "que", "cual", "quien","si", "desde",
+          "hasta", "durante", "entre", "tras", "ante", "contra", "hacia", "aunque", "porque","ya"
       ));
 
       @Override

@@ -1,5 +1,8 @@
 package mapreduce;
 
+//Parte 2 - Generos mas populares por año
+
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -94,11 +97,11 @@ public class PopularGenresByYear extends Configured implements Tool {
                 FileUtils.writeLines(textFile, records);
                 }
             }
-            System.out.println("Trabajo terminado con exito");
+            System.out.println("Trabajo terminado con exito - PopularGenresByYear");
         } else {
-            System.out.println("Trabajo falló");
+            System.out.println("Trabajo falló - PopularGenresByYear");
         }
-        System.exit(res);
+        //System.exit(res);
     }
     
 }

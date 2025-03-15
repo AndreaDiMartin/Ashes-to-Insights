@@ -1,0 +1,27 @@
+{
+  "namespace": "classes.avro",
+  "type": "record",
+  "name": "MonthlyPublicationRanking",
+  "fields": 
+  [
+    {
+      "name": "month",
+      "type": "string",
+      "doc": "Nombre del mes"
+    },
+    {
+      "name": "yearCount",
+      "type": "int",
+      "doc": "Cantidad de años que tienen este mes como el de mayor publicaciones"
+    },
+    {
+      "name": "years",
+      "type": 
+        {
+            "type": "array",
+            "items": "int"
+        },
+      "doc": "Lista de años que tienen este mes como el de mayor publicaciones"
+    }
+  ]
+}

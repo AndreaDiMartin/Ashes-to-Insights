@@ -1,0 +1,9 @@
+{
+  "namespace": "classes.avro",
+  "type": "record",
+  "name": "MonthValue",
+  "fields": [
+    {"name": "month", "type": "int"},
+    {"name": "albums", "type": "string"}
+  ]
+}

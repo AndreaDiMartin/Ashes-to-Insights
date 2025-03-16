@@ -1,10 +1,6 @@
 package mapreduce;
 
-
-//Mapear tracks con key = Año y Value = Género
-//Mapear Género y reducir al contar cuántos hay (por año)
-//Sortear o seleccionar aquellos con las cuentas más altas (Top 5)
-//Buscar que otra cosa se puede hacer con los géneros?????
+//Parte 1 - Generos mas populares por año
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -40,7 +36,7 @@ public class GenresByYearMapRed extends Configured implements Tool {
                 throws IOException {
             
             Integer year = track.getYearOfRelease();
-            if(year != null){
+            if(year != null && year > 1){
                 CharSequence genre = track.getGenreId();
                 String[] genreSplit = genre.toString().split(" ");
                 String mainGenre = genreSplit[genreSplit.length - 1];
@@ -51,22 +47,13 @@ public class GenresByYearMapRed extends Configured implements Tool {
             }
             }
     }
-/* 
-    public static class PopularGenresByYearMapper extends AvroMapper<Pair<Integer, CharSequence>, Pair<Integer, Pair<CharSequence, Integer>>> {
-        @Override
-        public void map(Pair<Integer, CharSequence> pair, AvroCollector<Pair<Integer, Pair<CharSequence, Integer>>> collector, Reporter reporter)
-                throws IOException {
-            
-            collector.collect(new Pair<Integer, Pair<CharSequence, Integer>>(pair.key(), new Pair<CharSequence, Integer>(pair.value(), 1)));
-        }
-    }
-*/
+
 public static class GenresByYearReducer extends AvroReducer<Integer, CharSequence, Pair<Integer, CharSequence>>{
     @Override
     public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
             throws IOException {
         CharSequence genres = "";
-        System.out.println("--------Año--------: " + key);
+        //System.out.println("--------Año--------: " + key);
         for (CharSequence value : values) {
             genres = genres.toString() + ", " + value.toString();
             //System.out.println(value);
@@ -118,11 +105,11 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
                 FileUtils.writeLines(textFile, records);
                 }
             }
-            System.out.println("Trabajo terminado con exito");
+            System.out.println("Trabajo terminado con exito - GenresByYearMapRed");
         } else {
-            System.out.println("Trabajo falló");
+            System.out.println("Trabajo falló - GenresByYearMapRed");
         }
-        System.exit(res);
+        //System.exit(res);
     }
 
     

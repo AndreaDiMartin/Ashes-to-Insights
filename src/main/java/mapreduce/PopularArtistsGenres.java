@@ -77,15 +77,18 @@ public class PopularArtistsGenres extends Configured implements Tool {
             Object[] lineArray = CSVParser(line);
             if(!lineArray[0].equals("id")){
                 Integer artistPopularity = Integer.parseInt(lineArray[28].toString());
-                if(artistPopularity > 65){
+                if(artistPopularity > 70){
                 String genre_id = lineArray[30].toString();
                 String[] genreSplit = genre_id.toString().split(" ");
                 String mainGenre = genreSplit[genreSplit.length - 1];
                 if (GENRES.contains(mainGenre)) {
                     genre_id = mainGenre;
                 }
-                System.out.println(lineArray[28] +  "," + lineArray[30]);
-                context.write(new Text(genre_id), new IntWritable(1));
+                if(genre_id.equals("")){
+                    genre_id = "Unknown";
+                }
+                //System.out.println(lineArray[28] +  "," + lineArray[30]);
+                context.write(new Text("{" + genre_id + "}"), new IntWritable(1));
                 }
             }
             }

@@ -1,3 +1,8 @@
+/*
+ * Este archivo tiene como finalidad serializar y deserializar usando la herramienta avro
+ * donde el esquema define el dataset Spotify
+ */
+
 package mapreduce;
 
 import java.io.BufferedWriter;

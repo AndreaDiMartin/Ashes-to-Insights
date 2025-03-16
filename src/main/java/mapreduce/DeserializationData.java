@@ -1,3 +1,7 @@
+/**
+ * Este archivo tiene como finalidad deserializar archivos avro con la estructura key, value
+ */
+
 package mapreduce;
 
 import org.apache.avro.Schema;

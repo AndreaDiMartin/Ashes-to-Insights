@@ -9,11 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.io.File;
 
-import org.apache.avro.*;
-import org.apache.avro.Schema.Type;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.mapred.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -22,16 +17,9 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 
-import mapreduce.SortPopularGenresByYearMapRed.FirstPartitioner;
-import mapreduce.SortPopularGenresByYearMapRed.GroupCopmparator;
-import mapreduce.SortPopularGenresByYearMapRed.KeyComparator;
-import mapreduce.SortPopularGenresByYearMapRed.PopularGenresByYearMapper;
-import mapreduce.SortPopularGenresByYearMapRed.PopularGenresByYearReducer;
-
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;

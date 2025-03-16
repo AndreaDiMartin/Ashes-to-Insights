@@ -44,14 +44,12 @@ public class AlbumPopularityAnalysis extends Configured implements Tool {
         {
 
             Integer year = track.getYearOfRelease();
-
-            // Dificultades tecnicas con la union en los tipos de Avro
-            Integer p = (track.get("album_popularity") instanceof Integer) ? 
-                        (Integer) track.get("album_popularity") : null;
+            Integer p = (Integer) track.getAlbumPopularity();
+            CharSequence name = track.getAlbumName();
  
-            if (year != null && year != 1 && p != null) 
+            if (year != null && year != 1 && p != null && name != null ) 
             {
-                PopularityAnalysis PA = new PopularityAnalysis(1, p, p, p, 0, 0.0, 0.0, 0.0, 0.0);
+                PopularityAnalysis PA = new PopularityAnalysis(name, p, p, p, 0, 0.0, 0.0, 0.0, 0.0);
                 collector.collect(new Pair<Integer, PopularityAnalysis>(year, PA));
             } 
 
@@ -84,7 +82,7 @@ public class AlbumPopularityAnalysis extends Configured implements Tool {
         {
 
             // Cantidad de items
-            int n = 0;
+            Integer n = 0;
 
             // Max
             Integer max = Integer.MIN_VALUE;
@@ -95,6 +93,9 @@ public class AlbumPopularityAnalysis extends Configured implements Tool {
             // Dict para determinar moda
             Map<Integer, Integer> popularityValuesMap = new HashMap<>();
 
+            // Queremos los datos de los albumes no repetidos
+            Set<CharSequence> uniqueAlbums = new HashSet<>();
+
             // Lista para calcular cuartiles 
             List<Integer> popularityValuesList = new ArrayList<>();
 
@@ -102,25 +103,27 @@ public class AlbumPopularityAnalysis extends Configured implements Tool {
 
             for (PopularityAnalysis PA : values) 
             {
-                // Sabemos que la mayoria de los campos tienen la 
-                // popularidad asociada al album
-                Integer p = PA.getMode();
+                CharSequence name = PA.getAlbums().toString();
+                if (uniqueAlbums.add(name)){
+                    // Sabemos que la mayoria de los campos tienen la 
+                    // popularidad asociada al album
+                    Integer p = PA.getMode();
 
-                if (p > max){
-                    max = Integer.valueOf(p);
+                    if (p > max){
+                        max = Integer.valueOf(p);
+                    }
+
+                    if (p < min){
+                        min = Integer.valueOf(p);
+                    }
+
+                    popularityValuesMap.putIfAbsent(Integer.valueOf(p), 0);
+                    Integer count = popularityValuesMap.get(Integer.valueOf(p));
+                    popularityValuesMap.put(Integer.valueOf(p), count + 1);
+
+                    popularityValuesList.add(Integer.valueOf(p));
+                    n++;
                 }
-
-                if (p < min){
-                    min = Integer.valueOf(p);
-                }
-
-                popularityValuesMap.putIfAbsent(Integer.valueOf(p), 0);
-                Integer count = popularityValuesMap.get(Integer.valueOf(p));
-                popularityValuesMap.put(Integer.valueOf(p), count + 1);
-
-                popularityValuesList.add(Integer.valueOf(p));
-                n++;
-                
             }
 
             // Calculo de cuartiles
@@ -161,20 +164,20 @@ public class AlbumPopularityAnalysis extends Configured implements Tool {
     
             // A partir de las llaves del diccionario hay que determinar cual
             // popularidad se repite mas 
-            Integer modeKey = -1;
-            Integer mode = Integer.MIN_VALUE;
+            Integer mode = -1;
+            Integer modeCount = Integer.MIN_VALUE;
             Set<Integer> keys = popularityValuesMap.keySet();
             for (Integer popkey : keys) 
             {
-                if (popularityValuesMap.get(popkey) > mode) 
+                if (popularityValuesMap.get(popkey) > modeCount) 
                 {
-                    mode = Integer.valueOf(popularityValuesMap.get(popkey));
-                    modeKey = Integer.valueOf(popkey);
+                    modeCount = Integer.valueOf(popularityValuesMap.get(popkey));
+                    mode = Integer.valueOf(popkey);
                 }
             }
 
                 
-            PopularityAnalysis PA = new PopularityAnalysis(n, min, max, mode,
+            PopularityAnalysis PA = new PopularityAnalysis(n.toString(), min, max, mode,
                                                             max - min, q1, q2, q3, q3 - q1 );
             collector.collect(new Pair<Integer, PopularityAnalysis>(key , PA));
         }

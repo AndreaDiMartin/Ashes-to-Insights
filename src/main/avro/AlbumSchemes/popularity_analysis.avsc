@@ -5,8 +5,8 @@
     "fields": 
     [
         {
-            "name": "albumsCount",
-            "type": "int",
+            "name": "albums",
+            "type": ["string"],
             "doc": "Número de álbumes lanzados en un año"
         },
         {

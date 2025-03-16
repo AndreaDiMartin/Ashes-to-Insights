@@ -56,7 +56,7 @@ public class DeserializationData {
                 // Extraer el valor (PopularityAnalysis)
                 GenericRecord valueRecord = (GenericRecord) record.get("value");
 
-                int albumsCount = (int) valueRecord.get("albumsCount");
+                CharSequence albums = valueRecord.get("albums").toString();
                 int min = (int) valueRecord.get("min");
                 int max = (int) valueRecord.get("max");
                 int mode = (int) valueRecord.get("mode");
@@ -69,7 +69,7 @@ public class DeserializationData {
                 // Crear un objeto de Pair
                 Pair<Integer, PopularityAnalysis> pair = new Pair<>(
                     key,
-                    new PopularityAnalysis(albumsCount, min, max, mode, range, q1, q2, q3, iqr)
+                    new PopularityAnalysis(albums, min, max, mode, range, q1, q2, q3, iqr)
                 );
 
                 // Añadir el par como cadena a la lista

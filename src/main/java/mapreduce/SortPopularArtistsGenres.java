@@ -34,19 +34,22 @@ import mapreduce.SortPopularGenresByYearMapRed.PopularGenresByYearMapper;
 import mapreduce.SortPopularGenresByYearMapRed.PopularGenresByYearReducer;
 
 public class SortPopularArtistsGenres extends Configured implements Tool{
-    static class PopularGenresByArtistMapper extends Mapper<LongWritable, Text, TextPair, NullWritable>{
+    static class PopularGenresByArtistMapper extends Mapper<LongWritable, Text, TextPair, NullWritable> {
         @Override
-        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString().trim();
-            System.out.println(line.length());
-            int lastSpaceIndex = line.lastIndexOf(' ');
-            if (lastSpaceIndex != -1) {
-                String genre = line.substring(1, line.indexOf('}')).trim();
-                int count = Integer.parseInt(line.substring(lastSpaceIndex).trim());
-                context.write(new TextPair(genre, String.valueOf(count)), NullWritable.get());
+            // Split the line by one or more spaces
+            String[] parts = line.split("\\s+");
+            if (parts.length >= 2) {
+                String genre = parts[0].substring(1, parts[0].length() - 1).trim(); // Remove the curly braces
+                try {
+                    int count = Integer.parseInt(parts[parts.length - 1]);
+                    context.write(new TextPair(genre, String.valueOf(count)), NullWritable.get());
+                } catch (NumberFormatException e) {
+                    // Log and skip the line if the count is not a valid integer
+                    System.err.println("Skipping line due to invalid count: " + line);
+                }
             }
-            
-            
         }
     }
 

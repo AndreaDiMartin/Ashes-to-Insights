@@ -20,6 +20,7 @@ import classes.avro.YearMonthSummary;
 import classes.avro.MonthPublication;
 import classes.avro.MonthlyPublicationRanking;
 import classes.avro.WeeklyAlbumReleases;
+import classes.avro.PopularityAnalysis;
 
 import java.io.ByteArrayOutputStream;
 import org.apache.avro.io.Encoder;
@@ -30,6 +31,60 @@ import org.apache.avro.generic.GenericDatumWriter;
 
 
 public class DeserializationData {
+
+
+    public static List<String> getPairIntPopularityAnalysisRecords(String avroFilePath) {
+        List<String> records = new ArrayList<>();
+
+        try {
+            // Definir el esquema del par
+            Schema schema = Pair.getPairSchema(Schema.create(Schema.Type.INT),  PopularityAnalysis.getClassSchema());
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+            File avroFile = new File(avroFilePath);
+
+            // Leer el archivo Avro
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            // Iterar sobre los registros
+            while (fileReader.hasNext()) {
+                GenericRecord record = fileReader.next();
+
+                // Extraer la clave (key)
+                int key = (int) record.get("key");
+
+                // Extraer el valor (PopularityAnalysis)
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                int albumsCount = (int) valueRecord.get("albumsCount");
+                int min = (int) valueRecord.get("min");
+                int max = (int) valueRecord.get("max");
+                int mode = (int) valueRecord.get("mode");
+                int range = (int) valueRecord.get("range");
+                double q1 = (double) valueRecord.get("q1");
+                double q2 = (double) valueRecord.get("q2");
+                double q3 = (double) valueRecord.get("q3");
+                double iqr = (double) valueRecord.get("iqr");
+
+                // Crear un objeto de Pair
+                Pair<Integer, PopularityAnalysis> pair = new Pair<>(
+                    key,
+                    new PopularityAnalysis(albumsCount, min, max, mode, range, q1, q2, q3, iqr)
+                );
+
+                // Añadir el par como cadena a la lista
+                records.add(pair.toString());
+                records.add("\n");
+            }
+
+            fileReader.close(); // Cerrar el lector
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return records;
+    }
 
     public static  List<String> getPairIntWARRecords(String avroFilePath){
 

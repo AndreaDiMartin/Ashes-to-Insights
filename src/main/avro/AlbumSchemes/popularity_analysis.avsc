@@ -31,22 +31,22 @@
         },
         {
             "name": "q1",
-            "type": "int",
+            "type": "double",
             "doc": "Primer cuartil (Q1)"
         },
         {
             "name": "q2",
-            "type": "int",
+            "type": "double",
             "doc": "Segundo cuartil o mediana (Q2)"
         },
         {
             "name": "q3",
-            "type": "int",
+            "type": "double",
             "doc": "Tercer cuartil (Q3)"
         },
         {
             "name": "iqr",
-            "type": "int",
+            "type": "double",
             "doc": "Rango intercuartílico (IQR)"
         }
     ]

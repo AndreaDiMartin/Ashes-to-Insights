@@ -1,0 +1,17 @@
+{
+	"namespace": "classes.avro",
+	"type": "record",
+	"name": "DayValue",
+	"fields": [
+		{
+			"name": "day", 
+			"type": "int",
+			"doc": "Entero que representa un día del mes"
+		},
+		{
+			"name": "albums", 
+			"type": "string",
+			"doc": "Representa la cantidad de albums únicos"
+		}
+	]
+}

@@ -1,0 +1,53 @@
+{
+    "namespace": "classes.avro",
+    "type": "record",
+    "name": "PopularityAnalysis",
+    "fields": 
+    [
+        {
+            "name": "albums",
+            "type": ["string"],
+            "doc": "Número de álbumes lanzados en un año"
+        },
+        {
+            "name": "min",
+            "type": "int",
+            "doc": "Popularidad mínima"
+        },
+        {
+            "name": "max",
+            "type": "int",
+            "doc": "Popularidad máxima"
+        },
+        {
+            "name": "mode",
+            "type": "int",
+            "doc": "Moda de la popularidad"
+        },
+        {
+            "name": "range",
+            "type": "int",
+            "doc": "Rango de la popularidad"
+        },
+        {
+            "name": "q1",
+            "type": "double",
+            "doc": "Primer cuartil (Q1)"
+        },
+        {
+            "name": "q2",
+            "type": "double",
+            "doc": "Segundo cuartil o mediana (Q2)"
+        },
+        {
+            "name": "q3",
+            "type": "double",
+            "doc": "Tercer cuartil (Q3)"
+        },
+        {
+            "name": "iqr",
+            "type": "double",
+            "doc": "Rango intercuartílico (IQR)"
+        }
+    ]
+}

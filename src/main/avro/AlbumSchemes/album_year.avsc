@@ -1,0 +1,9 @@
+{
+  "namespace": "classes.avro",
+  "type": "record",
+  "name": "AlbumYear",
+  "fields": [
+    {"name": "year", "type": "int"},
+    {"name": "albumName", "type": "string"}
+  ]
+}

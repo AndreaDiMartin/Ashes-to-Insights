@@ -1,0 +1,42 @@
+{
+    "namespace": "classes.avro",
+    "type": "record",
+    "name": "YearDaySummary",
+    "fields": 
+    [
+        {
+            "name": "maxPublicationDay",
+            "type":
+                {
+                    "type": "record",
+                    "name": "DayPublication",
+                    "fields": 
+                    [
+                        {
+                            "name": "Day",
+                            "type": "int"
+                        },
+
+                        {
+                            "name": "publicationCount",
+                            "type": "int"
+                        }
+                    ]
+                }
+        },
+
+        {
+            "name": "minPublicationDay",
+            "type": "DayPublication"
+        },
+
+        {
+            "name": "dailyPublications",
+            "type":
+                {
+                    "type": "array",
+                    "items": "DayPublication"
+                }
+        }
+    ]
+}

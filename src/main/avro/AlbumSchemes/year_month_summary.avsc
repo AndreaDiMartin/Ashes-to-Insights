@@ -1,0 +1,42 @@
+{
+    "namespace": "classes.avro",
+    "type": "record",
+    "name": "YearMonthSummary",
+    "fields": 
+    [
+        {
+            "name": "maxPublicationMonth",
+            "type":
+                {
+                    "type": "record",
+                    "name": "MonthPublication",
+                    "fields": 
+                    [
+                        {
+                            "name": "month",
+                            "type": "int"
+                        },
+
+                        {
+                            "name": "publicationCount",
+                            "type": "int"
+                        }
+                    ]
+                }
+        },
+
+        {
+            "name": "minPublicationMonth",
+            "type": "MonthPublication"
+        },
+
+        {
+            "name": "monthlyPublications",
+            "type":
+                {
+                    "type": "array",
+                    "items": "MonthPublication"
+                }
+        }
+    ]
+}

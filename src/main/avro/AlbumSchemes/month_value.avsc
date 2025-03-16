@@ -1,0 +1,17 @@
+{
+	"namespace": "classes.avro",
+	"type": "record",
+	"name": "MonthValue",
+	"fields": [
+		{
+			"name": "month", 
+			"type": "int",
+			"doc": "Entero que representa un mes del año "
+		},
+		{
+			"name": "albums", 
+			"type": "string",
+			"doc": "Representa la cantidad de albums únicos"
+		}
+	]
+}

@@ -1,0 +1,41 @@
+{
+	"namespace": "classes.avro",
+	"type": "record",
+	"name": "WeeklyAlbumReleases",
+	"fields": 
+    [
+      	{
+			"name": "daysOfWeek",
+			"type": 
+				{
+					"type": "array",
+					"items": {
+						"type": "record",
+						"name": "DayAlbumData",
+						"fields": 
+						[
+							{
+								"name": "day",
+								"type": "string",
+								"doc": "Día de la semana"
+							},
+							{
+								"name": "albumCount",
+								"type": "int",
+								"doc": "Cantidad de álbumes lanzados ese día"
+							},
+							{
+								"name": "albumList",
+								"type": {
+								"type": "array",
+								"items": "string"
+								},
+								"doc": "Lista de nombres de álbumes lanzados ese día"
+							}
+						]
+					}
+				},
+			"doc": "Datos de los días de la semana con lanzamientos de álbumes"
+      	}
+    ]
+}

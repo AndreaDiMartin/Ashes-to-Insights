@@ -37,6 +37,11 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class PopularArtistsGenres extends Configured implements Tool {
+    private static final List<String> GENRES = Arrays.asList(
+            "hop", "country", "rock", "jazz", "pop", "reggae", "metal", "blues", "rap", "blues", "classical", "house", "folk", "dance",
+            "r&b", "indie", "punk", "electronic", "hardcore", "trap"
+        );
+
     private static Object[] CSVParser(String line){
         List<String> spotifyLine = new ArrayList<>();
         StringBuilder currentField = new StringBuilder();
@@ -74,6 +79,11 @@ public class PopularArtistsGenres extends Configured implements Tool {
                 Integer artistPopularity = Integer.parseInt(lineArray[28].toString());
                 if(artistPopularity > 65){
                 String genre_id = lineArray[30].toString();
+                String[] genreSplit = genre_id.toString().split(" ");
+                String mainGenre = genreSplit[genreSplit.length - 1];
+                if (GENRES.contains(mainGenre)) {
+                    genre_id = mainGenre;
+                }
                 System.out.println(lineArray[28] +  "," + lineArray[30]);
                 context.write(new Text(genre_id), new IntWritable(1));
                 }

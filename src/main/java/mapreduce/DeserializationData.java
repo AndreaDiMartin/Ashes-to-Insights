@@ -6,21 +6,239 @@ import org.apache.avro.file.FileReader;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.mapred.Pair;
+import org.apache.avro.Schema.Type;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import classes.avro.MonthValue;
+import classes.avro.MonthValue;
+import classes.avro.YearMonthSummary;
+import classes.avro.MonthPublication;
+import classes.avro.MonthlyPublicationRanking;
+import classes.avro.WeeklyAlbumReleases;
+
+import java.io.ByteArrayOutputStream;
+import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.io.JsonEncoder;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.generic.GenericDatumWriter;
+
 
 public class DeserializationData {
+
+    public static  List<String> getPairIntWARRecords(String avroFilePath){
+
+        List<String> records = new ArrayList<>();
+        try {
+
+            Schema intSchema = Schema.create(Type.INT);
+            Schema WARSchema = WeeklyAlbumReleases.getClassSchema();
+            Schema outputSchema = Pair.getPairSchema(intSchema, WARSchema);             
+            Schema schema = Pair.getPairSchema(intSchema, WARSchema);
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            File avroFile = new File(avroFilePath);
+
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            while (fileReader.hasNext()) {
+                GenericRecord record = fileReader.next();
+
+                // Extraer la clave 
+                int key = (int) record.get("key");
+
+                // Extraer el valor como GenericRecord
+                GenericRecord weeklyAlbumReleasesRecord = (GenericRecord) record.get("value");
+
+                // Obtener los campos del esquema WeeklyAlbumReleases
+                List<GenericRecord> daysOfWeek = (List<GenericRecord>) weeklyAlbumReleasesRecord.get("daysOfWeek");
+
+                StringBuilder daysOfWeekString = new StringBuilder("[");
+                for (GenericRecord dayAlbumData : daysOfWeek) {
+                    String day = dayAlbumData.get("day").toString();
+                    int albumCount = (int) dayAlbumData.get("albumCount");
+                    List<CharSequence> albumList = (List<CharSequence>) dayAlbumData.get("albumList");
+
+                    // Formatear la información de cada día
+                    daysOfWeekString.append(String.format("\n{ Day: %s,\n AlbumCount: %d,\n AlbumList: %s}, ",day, albumCount, albumList.toString()));
+                }
+
+                if (daysOfWeekString.length() > 1) {
+                    daysOfWeekString.setLength(daysOfWeekString.length() - 2); 
+                }
+                daysOfWeekString.append("\n]");
+
+                // Crear una representacion leible del registro
+                String formattedRecord = String.format("Key: %d,\nDaysOfWeek: %s \n", key,daysOfWeekString.toString());
+
+                // Agregar el registro formateado a la lista de resultados
+                records.add(formattedRecord);
+                
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+    public static  List<String> getPairIntMPRRecords(String avroFilePath){
+
+        List<String> records = new ArrayList<>();
+        try {
+
+            Schema intSchema = Schema.create(Type.INT);
+            Schema MPRSchema = MonthlyPublicationRanking.getClassSchema();             
+            Schema schema = Pair.getPairSchema(intSchema, MPRSchema);;
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            File avroFile = new File(avroFilePath);
+
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            while (fileReader.hasNext()) {
+                GenericRecord record = fileReader.next();
+                
+                // Extraer el valor de la clave 
+                int key = (int) record.get("key");
+
+                // Extraer el valor asociado (value) como GenericRecord
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                // Obtener los campos de MonthlyPublicationRanking
+                String month = valueRecord.get("month").toString();
+                int yearCount = (int) valueRecord.get("yearCount");
+                List<Integer> years = (List<Integer>) valueRecord.get("years");
+
+                // Convertir la lista de años a una cadena
+                String yearsString = years.toString();
+
+                // Crear una representación legible del registro
+                String formattedRecord = String.format(
+                        "Key: %d, Month: %s, YearCount: %d, Years: %s",
+                        key, month, yearCount, yearsString
+                );
+
+                // Agregar el registro formateado a la lista de resultados
+                records.add(formattedRecord);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+
+    public static  List<String> getPairIntYearMonthSummaryRecords(String avroFilePath){
+
+        List<String> records = new ArrayList<>();
+        try {
+
+            Schema schema = Pair.getPairSchema(Schema.create(Type.INT), YearMonthSummary.getClassSchema());
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            File avroFile = new File(avroFilePath);
+
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            while (fileReader.hasNext()) {
+
+                GenericRecord record = fileReader.next();
+
+                // Obtener los campos principales
+                int year = (int) record.get("key");
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                // Extraer los valores de YearMonthSummary
+                GenericRecord maxPublicationMonth = (GenericRecord) valueRecord.get("maxPublicationMonth");
+                int maxMonth = (int) maxPublicationMonth.get("month");
+                int maxPublicationCount = (int) maxPublicationMonth.get("publicationCount");
+
+                GenericRecord minPublicationMonth = (GenericRecord) valueRecord.get("minPublicationMonth");
+                int minMonth = (int) minPublicationMonth.get("month");
+                int minPublicationCount = (int) minPublicationMonth.get("publicationCount");
+
+                // Crear un array de MonthPublication
+                List<GenericRecord> monthlyPublications = (List<GenericRecord>) valueRecord.get("monthlyPublications");
+                List<MonthPublication> monthlyPublicationList = new ArrayList<>();
+
+                for (GenericRecord monthlyPublication : monthlyPublications) {
+                    int month = (int) monthlyPublication.get("month");
+                    int publicationCount = (int) monthlyPublication.get("publicationCount");
+                    monthlyPublicationList.add(new MonthPublication(month, publicationCount));
+                }
+
+                // Crear un objeto YearMonthSummary
+                YearMonthSummary summary = new YearMonthSummary(
+                    new MonthPublication(maxMonth, maxPublicationCount),
+                    new MonthPublication(minMonth, minPublicationCount),
+                    monthlyPublicationList
+                );
+
+                // Agregar el par a la lista
+                Pair<Integer, YearMonthSummary> pair = new Pair<>(year, summary);
+                records.add(pair.toString());
+                records.add("\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+    public static  List<String> getPairIntAlbumValueRecords(String avroFilePath){
+
+        List<String> records = new ArrayList<>();
+        try {
+
+            Schema schema = Pair.getPairSchema(Schema.create(Type.INT),MonthValue.getClassSchema());
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            File avroFile = new File(avroFilePath);
+
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            while (fileReader.hasNext()) {
+
+                GenericRecord record = fileReader.next();
+
+                // Obtener los campos principales
+                int year = (int) record.get("key");
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                int month = (int) valueRecord.get("month");
+                String albums = valueRecord.get("albums").toString();
+
+                Pair<Integer, MonthValue> pair = new Pair<>(year, new MonthValue(month, albums));
+
+                records.add(pair.toString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
 
     /**
      * Deserializa los datos de un archivo Avro.
      * @param avroFilePath La ruta al archivo Avro.
      * @return Una lista de registros deserializados.
      */
-    public static List<String> getRecords(String avroFilePath, String keyDataType, String valueDataType) {
+    public static List<String> getRecords(String avroFilePath, String keyDataType, String valueDataType) 
+    {
         List<String> records = new ArrayList<>();
         try {
             if(keyDataType.equals("int") && valueDataType.equals("int")){
@@ -113,9 +331,10 @@ public class DeserializationData {
      * @throws IOException Si ocurre un error al leer el archivo Avro.
      * @see Pair
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         if (args.length != 3) {
-            System.out.println("Usage: DeserializationData <avro-file>");
+            System.out.println("Usage: DeserializationData <avro-file> <keyDataType> <valueDataType>");
             System.exit(1);
         }
 
@@ -124,9 +343,5 @@ public class DeserializationData {
         String valueDataType = args[2];
 
         List<String> records = getRecords(avroFilePath, keyDataType, valueDataType);
-
-        for (String record : records) {
-            System.out.println(record);
-        }
     }
 }

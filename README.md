@@ -46,3 +46,8 @@ Para correr el contador de albumes lanzados por día de la semana por año
 mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumsPerWeekdayPerYear -Dexec.args="outputSerializado outputAlbumsPerWeekdayPerYear"
 ```
 
+Para correr el analizador por a año de la popularidad de los albumes
+```bash
+mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumPopularityAnalysis -Dexec.args="outputSerializado outputAlbumPopularityAnalysis"
+```
+

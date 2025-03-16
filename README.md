@@ -43,12 +43,12 @@ mvn -q exec:java -Dexec.mainClass=mapreduce.MaxPublicationMonthPerYear -Dexec.ar
 
 Para correr el contador de lanzamientos de albumes por días de cada año
 ```bash
-mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumsPerDay -Dexec.args="outputSerializado outputAlbumsPerDay"
+mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumsPerDay -Dexec.args="outputSerializado outputAlbumsPerDay"
 ```
 
 Para correr el un resumen de lanzamientos de albumes por días de cada año
 ```bash
-mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumsPerDaySummary -Dexec.args="outputAlbumsPerDay outputAlbumsPerDaySummary
+mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumsPerDaySummary -Dexec.args="outputAlbumsPerDay outputAlbumsPerDaySummary
 ```
 
 Para correr el contador de albumes lanzados por día de la semana por año
@@ -58,6 +58,12 @@ mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumsPerWeekdayPerYear -Dexec.args=
 
 Para correr el analizador por año de la popularidad de los albumes
 ```bash
-mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumPopularityAnalysis -Dexec.args="outputSerializado outputAlbumPopularityAnalysis"
+mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumPopularityAnalysis -Dexec.args="outputSerializado outputAlbumPopularityAnalysis"
 ```
+
+Para correr el contador de tipos distintos de albumes por año
+```bash
+mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumTypes -Dexec.args="outputSerializado outputAlbumTypes"
+```
+
 

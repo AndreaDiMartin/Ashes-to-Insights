@@ -1,0 +1,17 @@
+{
+	"namespace": "classes.avro",
+	"type": "record",
+	"name": "TypeValue",
+	"fields": [
+		{
+			"name": "type", 
+			"type": "string",
+			"doc": "String que representa el tipo del album"
+		},
+		{
+			"name": "albums", 
+			"type": "string",
+			"doc": "Representa la cantidad de albums únicos"
+		}
+	]
+}

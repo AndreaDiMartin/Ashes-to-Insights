@@ -38,6 +38,7 @@ public class SortPopularArtistsGenres extends Configured implements Tool{
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
             String line = value.toString().trim();
+            System.out.println(line.length());
             int lastSpaceIndex = line.lastIndexOf(' ');
             if (lastSpaceIndex != -1) {
                 String genre = line.substring(1, line.indexOf('}')).trim();

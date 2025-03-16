@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import classes.avro.MonthValue;
+// Esquemas usados
+import classes.avro.DayValue;
 import classes.avro.MonthValue;
 import classes.avro.YearMonthSummary;
 import classes.avro.MonthPublication;
@@ -22,10 +23,10 @@ import classes.avro.MonthlyPublicationRanking;
 import classes.avro.WeeklyAlbumReleases;
 import classes.avro.PopularityAnalysis;
 
-import java.io.ByteArrayOutputStream;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
+// import java.io.ByteArrayOutputStream;
+// import org.apache.avro.io.Encoder;
+// import org.apache.avro.io.EncoderFactory;
+// import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.generic.GenericDatumWriter;
 
@@ -242,6 +243,42 @@ public class DeserializationData {
 
                 // Agregar el par a la lista
                 Pair<Integer, YearMonthSummary> pair = new Pair<>(year, summary);
+                records.add(pair.toString());
+                records.add("\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+    public static  List<String> getPairIntDayValueRecords(String avroFilePath){
+
+        List<String> records = new ArrayList<>();
+        try {
+
+            Schema schema = Pair.getPairSchema(Schema.create(Type.INT),DayValue.getClassSchema());
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            File avroFile = new File(avroFilePath);
+
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            while (fileReader.hasNext()) {
+
+                GenericRecord record = fileReader.next();
+
+                // Obtener los campos principales
+                int year = (int) record.get("key");
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                int day = (int) valueRecord.get("day");
+                String albums = valueRecord.get("albums").toString();
+
+                Pair<Integer, DayValue> pair = new Pair<>(year, new DayValue(day, albums));
+
                 records.add(pair.toString());
                 records.add("\n");
             }

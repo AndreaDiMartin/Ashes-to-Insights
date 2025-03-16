@@ -41,12 +41,17 @@ Para correr el mapReduce que muestra los meses que tienen mayores lanzamientos d
 mvn -q exec:java -Dexec.mainClass=mapreduce.MaxPublicationMonthPerYear -Dexec.args="outputAlbumsPerMonthSummary outputMaxPublicationMonthPerYear" 
 ```
 
+Para correr el contador de lanzamientos de albumes por días de cada año
+```bash
+mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumsPerDay -Dexec.args="outputSerializado outputAlbumsPerDay"
+```
+
 Para correr el contador de albumes lanzados por día de la semana por año
 ```bash
 mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumsPerWeekdayPerYear -Dexec.args="outputSerializado outputAlbumsPerWeekdayPerYear"
 ```
 
-Para correr el analizador por a año de la popularidad de los albumes
+Para correr el analizador por año de la popularidad de los albumes
 ```bash
 mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumPopularityAnalysis -Dexec.args="outputSerializado outputAlbumPopularityAnalysis"
 ```

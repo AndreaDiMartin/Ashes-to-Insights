@@ -117,13 +117,13 @@ public class AlbumsPerDaySummary extends Configured implements Tool {
                     minDayPublication.setPublicationCount(publicationCount);
                 }
 
-                // Actualiza el mes con más publicaciones si es necesario
+                // Actualiza el dia con más publicaciones si es necesario
                 if (publicationCount > maxDayPublication.getPublicationCount()){
                     maxDayPublication.setDay(day);
                     maxDayPublication.setPublicationCount(publicationCount);
                 }
 
-                // Almacena la publicación del mes en el array
+                // Almacena la publicación del dia en el array
                 days[day - 1] = new DayPublication(day, publicationCount);
             }
 
@@ -131,13 +131,12 @@ public class AlbumsPerDaySummary extends Configured implements Tool {
             // Crea un GenericArray para almacenar las publicaciones
             GenericArray<DayPublication> Days = new GenericData.Array<>(12, arraySchema);
 
-            // Llena el array con las publicaciones de cada mes
+            // Llena el array con las publicaciones de cada dia
             for (int i = 0; i < 31; i++) {
                 DayPublication publicationDay = days[i];
                 Days.add(publicationDay);
             }
 
-            // Crea el objeto YearMonthSummary final
             YearDaySummary yearDaySummary = new YearDaySummary(maxDayPublication, minDayPublication, Days);
 
             collector.collect(new Pair<>( key , yearDaySummary));

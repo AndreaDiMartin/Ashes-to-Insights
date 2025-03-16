@@ -18,7 +18,9 @@ import java.util.List;
 import classes.avro.DayValue;
 import classes.avro.MonthValue;
 import classes.avro.YearMonthSummary;
+import classes.avro.YearDaySummary;
 import classes.avro.MonthPublication;
+import classes.avro.DayPublication;
 import classes.avro.MonthlyPublicationRanking;
 import classes.avro.WeeklyAlbumReleases;
 import classes.avro.PopularityAnalysis;
@@ -193,7 +195,6 @@ public class DeserializationData {
         return records;
     }
 
-
     public static  List<String> getPairIntYearMonthSummaryRecords(String avroFilePath){
 
         List<String> records = new ArrayList<>();
@@ -243,6 +244,66 @@ public class DeserializationData {
 
                 // Agregar el par a la lista
                 Pair<Integer, YearMonthSummary> pair = new Pair<>(year, summary);
+                records.add(pair.toString());
+                records.add("\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+
+     public static  List<String> getPairIntYearDaySummaryRecords(String avroFilePath){
+
+        List<String> records = new ArrayList<>();
+        try {
+
+            Schema schema = Pair.getPairSchema(Schema.create(Type.INT), YearDaySummary.getClassSchema());
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            File avroFile = new File(avroFilePath);
+
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            while (fileReader.hasNext()) {
+
+                GenericRecord record = fileReader.next();
+
+                // Obtener los campos principales
+                int year = (int) record.get("key");
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                // Extraer los valores de YearDaySummary
+                GenericRecord maxPublicationDay = (GenericRecord) valueRecord.get("maxPublicationDay");
+                int maxDay = (int) maxPublicationDay.get("Day");
+                int maxPublicationCount = (int) maxPublicationDay.get("publicationCount");
+
+                GenericRecord minPublicationDay = (GenericRecord) valueRecord.get("minPublicationDay");
+                int minDay = (int) minPublicationDay.get("Day");
+                int minPublicationCount = (int) minPublicationDay.get("publicationCount");
+
+                // Crear un array de DayPublication
+                List<GenericRecord> dailyPublications = (List<GenericRecord>) valueRecord.get("dailyPublications");
+                List<DayPublication> dailyPublicationList = new ArrayList<>();
+
+                for (GenericRecord dailyPublication : dailyPublications) {
+                    int day = (int) dailyPublication.get("Day");
+                    int publicationCount = (int) dailyPublication.get("publicationCount");
+                    dailyPublicationList.add(new DayPublication(day, publicationCount));
+                }
+
+                // Crear un objeto YearMonthSummary
+                YearDaySummary summary = new YearDaySummary(
+                    new DayPublication(maxDay, maxPublicationCount),
+                    new DayPublication(minDay, minPublicationCount),
+                    dailyPublicationList
+                );
+
+                // Agregar el par a la lista
+                Pair<Integer, YearDaySummary> pair = new Pair<>(year, summary);
                 records.add(pair.toString());
                 records.add("\n");
             }

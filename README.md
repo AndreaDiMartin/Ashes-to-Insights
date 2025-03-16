@@ -46,6 +46,11 @@ Para correr el contador de lanzamientos de albumes por días de cada año
 mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumsPerDay -Dexec.args="outputSerializado outputAlbumsPerDay"
 ```
 
+Para correr el un resumen de lanzamientos de albumes por días de cada año
+```bash
+mvn -e exec:java -Dexec.mainClass=mapreduce.AlbumsPerDaySummary -Dexec.args="outputAlbumsPerDay outputAlbumsPerDaySummary
+```
+
 Para correr el contador de albumes lanzados por día de la semana por año
 ```bash
 mvn -q exec:java -Dexec.mainClass=mapreduce.AlbumsPerWeekdayPerYear -Dexec.args="outputSerializado outputAlbumsPerWeekdayPerYear"

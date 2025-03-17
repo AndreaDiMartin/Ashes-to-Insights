@@ -512,9 +512,34 @@ public class DeserializationData {
 
             // Cerrar el lector de archivos
             fileReader.close();
-        }
+        }else if(keyDataType.equals("string")&& valueDataType.equals("string")){
+            // Definir el esquema clave-valor
+            String schemaString = "{\"type\":\"record\",\"name\":\"Pair\",\"fields\":[{\"name\":\"key\",\"type\":\"string\"},{\"name\":\"value\",\"type\":\"string\"}]}";
+            Schema schema = new Schema.Parser().parse(schemaString);
 
-        } catch (IOException e) {
+            // Crear un lector de datos genéricos
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+
+            // Leer el archivo Avro
+            File avroFile = new File(avroFilePath);
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            // Iterar sobre los registros y deserializarlos
+            while (fileReader.hasNext()) {
+                // Leer el siguiente registro
+                GenericRecord record = fileReader.next();
+                // Crear un par clave-valor y obtener los valores de la clave y el valor del registro
+                Pair<Integer, CharSequence> pair = new Pair<>(record.get("key"), record.get("value"));
+                // Imprimir el par clave-valor en la consola
+                records.add(pair.toString());
+               // System.out.println(pair.toString());
+            }
+
+            // Cerrar el lector de archivos
+            fileReader.close();
+
+        }
+     } catch (IOException e) {
             e.printStackTrace();
         }
         return records;

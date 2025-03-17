@@ -158,7 +158,7 @@ public static class GenresFeatureReducer extends AvroReducer<CharSequence, CharS
             for (File outputFile : outputFiles) {
                 if (outputFile.getName().endsWith(".avro")) {
                 String textName = outputFile.getName().replace(".avro", ".txt");
-                List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "int", "string");
+                List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "string", "string");
                 File textFile = new File(outputFile.getParent(), textName);
                 FileUtils.writeLines(textFile, records);
                 }

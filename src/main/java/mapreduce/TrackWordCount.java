@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -14,6 +15,7 @@ import org.apache.avro.mapred.AvroJob;
 import org.apache.avro.mapred.AvroMapper;
 import org.apache.avro.mapred.AvroReducer;
 import org.apache.avro.mapred.Pair;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -61,7 +63,7 @@ public class TrackWordCount extends Configured implements Tool {
   public static class IntSumReducer extends AvroReducer<Object, Integer, Pair<String, Integer>> {
       @Override
       public void reduce(Object key, Iterable<Integer> values, AvroCollector<Pair<String, Integer>> collector, Reporter reporter) throws IOException {
-        String keyStr = (key != null) ? key.toString() : null; // Convierte Utf8 a String y maneja nulos
+        String keyStr = (key != null) ? key.toString() : null;
     
         if (keyStr != null) {
             int sum = 0;
@@ -107,9 +109,9 @@ public class TrackWordCount extends Configured implements Tool {
       for (File outputFile : outputFiles) {
         if (outputFile.getName().endsWith(".avro")) {
           String textName = outputFile.getName().replace(".avro", ".txt");
-          //List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "string", "int");
+          List<String> records = DeserializationData.getRecords(outputFile.getAbsolutePath(), "string", "int");
           File textFile = new File(outputFile.getParent(), textName);
-          //FileUtils.writeLines(textFile, records);
+          FileUtils.writeLines(textFile, records);
         }
       }
       System.out.println("Job executed successfully");

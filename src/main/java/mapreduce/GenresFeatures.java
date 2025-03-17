@@ -112,6 +112,7 @@ public static class GenresFeatureReducer extends AvroReducer<CharSequence, CharS
             energyMean /= num;
             loudnessMean /= num;
             valenceMean /= num;
+            acousticnessMean /=num;
         }
         collector.collect(new Pair<CharSequence, CharSequence>(key, genre + "/" + explicitMean.toString() + "/" + energyMean.toString() + "/"  + loudnessMean.toString() + "/" + valenceMean.toString() + "/" + acousticnessMean.toString()));
     }

@@ -117,12 +117,15 @@ public class PopularArtistsGenres extends Configured implements Tool {
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
+        //Se designan las clases de los mappers y reducers
         job.setMapperClass(PopularArtistsGenresMapper.class);
         job.setReducerClass(PopularArtistsGenresReducer.class);
 
+        //Se designan las clases de salida
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
+        //Se ejecuta el trabajos
         System.exit(job.waitForCompletion(true) ? 0 : 1);
         return 0;
     }

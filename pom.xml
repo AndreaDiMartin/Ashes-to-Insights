@@ -16,7 +16,6 @@
         <compiler-plugin.version>3.8.0</compiler-plugin.version>
         <junit.version>5.11.4</junit.version>
         <hadoop.version>3.4.1</hadoop.version>
-        <maven.opts>-Xmx6g</maven.opts>
     </properties>
 
     <dependencies>

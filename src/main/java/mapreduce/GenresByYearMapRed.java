@@ -45,7 +45,7 @@ public class GenresByYearMapRed extends Configured implements Tool {
                 }
                 collector.collect(new Pair<Integer, CharSequence>(year, genre));
             }
-            }
+        }
     }
 
 public static class GenresByYearReducer extends AvroReducer<Integer, CharSequence, Pair<Integer, CharSequence>>{
@@ -53,14 +53,9 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
     public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
             throws IOException {
         CharSequence genres = "";
-        //System.out.println("--------Año--------: " + key);
         for (CharSequence value : values) {
             genres = genres.toString() + ", " + value.toString();
-            //System.out.println(value);
         }
-        //for (CharSequence genre : genres) {
-          //  System.out.println(genre);
-        //}
         collector.collect(new Pair<Integer, CharSequence>(key, genres));
     }
 }
@@ -70,18 +65,23 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
             System.err.println("Usage: GenresByYear <input path> <output path>");
             return -1;
         }
+        //Se obtiene la configuración de hadoop 
         JobConf conf = new JobConf(getConf(), GenresByYearMapRed.class);
         conf.setJobName("PopularGenresByYear");
 
+        //Se elimina el directorio de salida si ya existe
         Path outputPath = new Path(args[1]);
         outputPath.getFileSystem(conf).delete(outputPath, true);
 
+        //Se establecen los paths de entrada y salida
         FileInputFormat.setInputPaths(conf, new Path(args[0]));
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
+        //Se establecen las clases del Mapper y Reducer
         AvroJob.setMapperClass(conf, GenresByYearMapper.class);
         AvroJob.setReducerClass(conf, GenresByYearReducer.class);
 
+        //Se establecen los tipos de salida del Mapper y Reducer
         AvroJob.setInputSchema(conf, spotify.getClassSchema());
         AvroJob.setOutputSchema(conf,Pair.getPairSchema(Schema.create(Type.INT),Schema.create(Type.STRING)));
 
@@ -95,6 +95,7 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
         FileSystem fs = FileSystem.get(conf);
     
         if(res == 0){
+            //En caso de que el trabajo haya sido exitoso, se crea un archivo de texto con los resultados
             File outputDir = new File(args[1]);
             File[] outputFiles = outputDir.listFiles();
             for (File outputFile : outputFiles) {
@@ -109,7 +110,6 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
         } else {
             System.out.println("Trabajo falló - GenresByYearMapRed");
         }
-        //System.exit(res);
     }
 
     

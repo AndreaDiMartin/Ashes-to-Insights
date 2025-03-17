@@ -27,19 +27,22 @@ import classes.avro.spotify;
 
 public class GenresByYearMapRed extends Configured implements Tool {
     public static class GenresByYearMapper extends AvroMapper<spotify, Pair<Integer, CharSequence>> {
+        //Géneros principales más comunes
         private static final List<String> GENRES = Arrays.asList(
-            "hop", "country", "rock", "jazz", "pop", "reggae", "metal", "blues", "rap", "blues", "classical", "house", "folk", "dance",
+            "hop", "country", "rock", "jazz", "pop", "reggae", "metal", "blues", "rap", "classical", "house", "folk", "dance",
             "r&b", "indie", "punk", "electronic", "hardcore", "trap"
         );
         @Override
         public void map(spotify track, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
                 throws IOException {
-            
+            //Se obtiene el año de lanzamiento de la canción
             Integer year = track.getYearOfRelease();
+            //Se verifica que el año sea válido 
             if(year != null && year > 1){
                 CharSequence genre = track.getGenreId();
                 String[] genreSplit = genre.toString().split(" ");
                 String mainGenre = genreSplit[genreSplit.length - 1];
+                //Si el género se puede agrupar en uno de los géneros principales, se asigna
                 if (GENRES.contains(mainGenre)) {
                     genre = mainGenre;
                 }
@@ -52,6 +55,7 @@ public static class GenresByYearReducer extends AvroReducer<Integer, CharSequenc
     @Override
     public void reduce(Integer key, Iterable<CharSequence> values, AvroCollector<Pair<Integer, CharSequence>> collector, Reporter reporter)
             throws IOException {
+        //Se crea un string con los géneros separados por comas
         CharSequence genres = "";
         for (CharSequence value : values) {
             genres = genres.toString() + ", " + value.toString();

@@ -1,17 +1,5 @@
-//Mapper para agrupar por genero y contar canciones de cada género
-//Generos:
-//Hip-hop
-//Country
-//Rock
-//Jazz
-//Pop
-//Reggae
-//Metal
-//Blues
-//Rap
-
-
-package mapreduce;
+// Codigo para contar por genero el número de canciones en el dataset de Spotify 
+package mapreduce.genreanalysis;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -33,6 +21,7 @@ import org.apache.hadoop.util.*;
 
 
 import classes.avro.spotify;
+import mapreduce.DeserializationData;
 
 
 public class GenreCounterMapRed extends Configured implements Tool{

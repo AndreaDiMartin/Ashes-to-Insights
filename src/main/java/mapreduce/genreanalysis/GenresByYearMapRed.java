@@ -1,4 +1,4 @@
-package mapreduce;
+package mapreduce.genreanalysis;
 
 //Parte 1 - Generos mas populares por año
 
@@ -23,6 +23,7 @@ import org.apache.hadoop.util.*;
 
 
 import classes.avro.spotify;
+import mapreduce.DeserializationData;
 
 
 public class GenresByYearMapRed extends Configured implements Tool {

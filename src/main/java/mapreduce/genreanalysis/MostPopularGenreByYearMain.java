@@ -1,4 +1,4 @@
-package mapreduce;
+package mapreduce.genreanalysis;
 
 public class MostPopularGenreByYearMain {
     public static void main(String[] args) throws Exception {

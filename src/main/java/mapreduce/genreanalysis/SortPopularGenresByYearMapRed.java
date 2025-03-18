@@ -1,4 +1,4 @@
-package mapreduce;
+package mapreduce.genreanalysis;
 
 //Parte 3 -  - Generos mas populares por año
 

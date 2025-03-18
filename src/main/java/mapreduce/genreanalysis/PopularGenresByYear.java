@@ -1,4 +1,4 @@
-package mapreduce;
+package mapreduce.genreanalysis;
 
 //Parte 2 - Generos mas populares por año
 
@@ -24,6 +24,9 @@ import org.apache.hadoop.io.GenericWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
+
+import mapreduce.DeserializationData;
+
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 

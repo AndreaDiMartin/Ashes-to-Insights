@@ -1,4 +1,4 @@
-package mapreduce;
+package mapreduce.genreanalysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import org.apache.hadoop.util.*;
 //Separar por decadas
 
 import classes.avro.spotify;
+import mapreduce.DeserializationData;
 
 public class GenresFeatures extends Configured implements Tool{
         //Función para separar por decadas el año de publicacion de una canción

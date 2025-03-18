@@ -32,18 +32,14 @@ import mapreduce.SpotifyParser;
 
 public class SpotifySerializer {
 
-    /**
-     * Serializes the data from a CSV file to an Avro file.
-     * @throws IOException If an I/O error occurs.
-     * @throws CsvValidationException If a CSV validation error occurs.
-     */
+   
     public static void serializer() throws IOException, CsvValidationException {
-        // Paths
-        String CSV_FILE_PATH = "tracks-clean.csv"; //CAMBIAR DESTINO SI ES NECESARIO
+        //Se establecen las rutas de los archivos 
+        String CSV_FILE_PATH = "tracks-clean.csv";
         String AVRO_SCHEMA_PATH = "./src/avro/spotify.avsc";
         String PATH = "./outputSerializado/spotify.avro";
 
-        // Load Avro schema
+        //Se define el esquema de los datos de spotify
         Schema schema;
         try {
             schema = new Schema.Parser().parse(new File(AVRO_SCHEMA_PATH));
@@ -51,6 +47,7 @@ public class SpotifySerializer {
             schema = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"spotify\",\"namespace\":\"classes.avro\",\"fields\":[{\"name\":\"id\",\"type\":[\"string\",\"null\"]},{\"name\":\"track_name\",\"type\":[\"string\",\"null\"]},{\"name\":\"duration\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"explicit\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"popularity\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"acousticness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"danceability\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"energy\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"instrumentalness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"key\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"liveness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"loudness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"speechiness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"tempo\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"time_signature\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"valence\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"album_name\",\"type\":[\"string\",\"null\"]},{\"name\":\"album_type\",\"type\":[\"string\",\"null\"]},{\"name\":\"year_of_release\",\"type\":[\"int\",\"null\"]},{\"name\":\"month_of_release\",\"type\":[\"int\",\"null\"]},{\"name\":\"day_of_release\",\"type\":[\"int\",\"null\"]},{\"name\":\"weekday_of_release\",\"type\":[\"string\",\"null\"]},{\"name\":\"album_popularity\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"artist_name\",\"type\":[\"string\",\"null\"]},{\"name\":\"artist_popularity\",\"type\":[\"int\",\"null\",\"string\"]},{\"name\":\"followers\",\"type\":[\"int\",\"null\",\"string\"]},{\"name\":\"genre_id\",\"type\":[\"string\",\"null\"]}]}");
         }
 
+        //Se define la configuración para el archivo de salida avro
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
         Path path = new Path(PATH);
@@ -58,18 +55,17 @@ public class SpotifySerializer {
             fs.delete(path, true);
         }
 
-        // Create a DataFileWriter
+        //Se crea el dataFileWriter para escribir los datos en el archivo avro
         DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(new SpecificDatumWriter<>(schema));
         dataFileWriter.create(schema, fs.create(path));
 
+        //Se llama a la clase SpotifyParser para obtener los datos del archivo csv
         SpotifyParser parser = new SpotifyParser();
         List<String[]> records = parser.parse(new Text(CSV_FILE_PATH));
 
-            // Skip the header row of the CSV file
-            // Take the next row as the first record
         for (String[] nextRecord : records) {
             
-            // Create a GenericRecord using the schema
+            // Se extraen los datos de cada campo y se guardan en un objeto GenericRecord
             GenericRecord record = new GenericData.Record(schema);
             record.put("id", nextRecord[0]);
             record.put("track_name", nextRecord[1].isEmpty() ? null :  nextRecord[1]);
@@ -99,27 +95,24 @@ public class SpotifySerializer {
             record.put("followers", nextRecord[25].isEmpty() ? null :  Integer.parseInt(nextRecord[25]));
             record.put("genre_id", nextRecord[26].isEmpty() ? null :  nextRecord[26]);
 
-            // Serialize the record to the Avro file
+            //Se escribe el registro en el archivo avro
             dataFileWriter.append(record);
-            // Print the record to the console
+            //Se imprime el registro 
             System.out.println(record);
         }
         
-        // Close the Avro file
+        //Se cierra el archivo avro
         dataFileWriter.close();
     }
 
-    /**
-     * Deserializes the data from an Avro file to a text file.
-     * @throws IOException If an I/O error occurs.
-     */
+
     public static void deserializer() throws IOException {
-        // Paths
+        //Se establecen las rutas de los archivos necesarios para la deserialización
         String AVRO_SCHEMA_PATH = "src/avro/spotify.avsc";
         String INPUT_PATH = "./outputSerializado/spotify.avro";
         String OUTPUT_PATH = "./outputDeserializado/spotify_deserialized.txt";
     
-        // Load Avro schema
+        // Se carga el esquema de los datos de spotify que posee en archivo avro
         Schema schema;
         try {
             schema = new Schema.Parser().parse(new File(AVRO_SCHEMA_PATH));
@@ -127,14 +120,14 @@ public class SpotifySerializer {
             schema = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"spotify\",\"namespace\":\"classes.avro\",\"fields\":[{\"name\":\"id\",\"type\":[\"string\",\"null\"]},{\"name\":\"track_name\",\"type\":[\"string\",\"null\"]},{\"name\":\"duration\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"explicit\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"popularity\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"acousticness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"danceability\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"energy\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"instrumentalness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"key\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"liveness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"loudness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"speechiness\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"tempo\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"time_signature\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"valence\",\"type\":[\"float\",\"string\",\"null\"]},{\"name\":\"album_name\",\"type\":[\"string\",\"null\"]},{\"name\":\"album_type\",\"type\":[\"string\",\"null\"]},{\"name\":\"year_of_release\",\"type\":[\"int\",\"null\"]},{\"name\":\"month_of_release\",\"type\":[\"int\",\"null\"]},{\"name\":\"day_of_release\",\"type\":[\"int\",\"null\"]},{\"name\":\"weekday_of_release\",\"type\":[\"string\",\"null\"]},{\"name\":\"album_popularity\",\"type\":[\"int\",\"string\",\"null\"]},{\"name\":\"artist_name\",\"type\":[\"string\",\"null\"]},{\"name\":\"artist_popularity\",\"type\":[\"int\",\"null\",\"string\"]},{\"name\":\"followers\",\"type\":[\"int\",\"null\",\"string\"]},{\"name\":\"genre_id\",\"type\":[\"string\",\"null\"]}]}");
         }
     
-        // Open data file
+        //Se abre el archivo avro para leer los registros
         Configuration conf = new Configuration();
         Path inputPath = new Path(INPUT_PATH);
         DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
         FsInput fsInput = new FsInput(inputPath, conf);
         DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(fsInput, datumReader);
     
-        // Open output file
+        //Se crea el archivo de salida y se borra si ya existe
         FileSystem fs = FileSystem.get(conf);
         Path outputPath = new Path(OUTPUT_PATH);
         if (fs.exists(outputPath)) {
@@ -142,11 +135,10 @@ public class SpotifySerializer {
         }
         FSDataOutputStream outputStream = fs.create(outputPath);
 
-        // Write deserialized records to the output file in HDFS
+        //Se escriben los registros deserializados en el archivo de salida
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"))) {
             GenericRecord record = null;
             while (dataFileReader.hasNext()) {
-                // Reuse record object by passing it to next(). This saves object allocation.
                 record = dataFileReader.next(record);
                 writer.write(record.toString());
                 writer.newLine();
@@ -160,17 +152,16 @@ public class SpotifySerializer {
     }
 
     public static void main(String[] args) throws IOException, CsvValidationException {
-        // Check if the flag is provided
+        //Verifica que el número de argumentos sea correcto
         if (args.length != 1) {
             System.out.println("Usage: GenerateSpotify <flag>");
             System.exit(1);
         }
-        // Get the flag
+        //Se obtiene el flag para determinar si se serializa o deserializa
         String flag = args[0];
-        // Call the serializer or deserializer method based on the flag
-        if (flag.equals("serializer")) { // Serialize the data
+        if (flag.equals("serializer")) { 
             serializer();
-        } else if (flag.equals("deserializer")) { // Deserialize the data
+        } else if (flag.equals("deserializer")) { 
             deserializer();
         } else {
             System.out.println("Invalid flag. Use 'serializer' or 'deserializer'.");

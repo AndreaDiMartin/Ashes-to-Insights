@@ -1,3 +1,8 @@
+/**
+ * Este archivo contiene la clase SpotifyParser que se encarga de leer un archivo CSV 
+ * y parsearlo para obtener los campos.
+ */
+
 package mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
@@ -15,77 +20,65 @@ import java.util.List;
 
 public class SpotifyParser {
 
-    /**
-     * Parse the records in a text file.
-     * @param value
-     * @return A list of records.
-     * @throws IOException
-     */
+
     public List<String[]> parse(Text value) throws IOException {
-        // Create a list to store the records
+        //Crea una lista para almacenar los registros
         List<String[]> records = new ArrayList<>();
 
-        // Create a configuration object and a file system object
+        //Crea una configuración y un sistema de archivos
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
 
-        // Get the path to the file
+        //Obtiene el path del archivo
         Path path = new Path(value.toString());
         FSDataInputStream inputStream = null;
         BufferedReader reader = null;
 
-        // Read the file line by line
+        // Lee el archivo linea por linea
         try {
             inputStream = fs.open(path);
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
-            // Read the rest of the records
             while ((line = reader.readLine()) != null) {
-                // Use a more robust CSV parsing method
+                //Se parsea el CSV
                 String[] fields = parseCSVLine(line);
                 records.add(fields);
             }
         } finally {
-            // Close the reader and the input stream
+            //Se cierran los streams
             IOUtils.closeStream(reader);
             IOUtils.closeStream(inputStream);
         }
         return records;
     }
 
-    /**
-     * Parse a line of CSV data.
-     * @param line
-     * @return An array of fields.
-     */
     private String[] parseCSVLine(String line) {
-        // Create a list to store the fields
+        //Se crea una lista para almacenar los campos de la linea
         List<String> fields = new ArrayList<>();
 
-        // Create a string builder to store the current field
+        //Se crea un StringBuilder para almacenar el campo actual
         StringBuilder currentField = new StringBuilder();
-        // Create a flag to keep track of whether we're inside quotes
+        // Crea un flag para tomar en cuenta si se está dentro de comillas
         boolean inQuotes = false;
 
-        // Iterate over the characters in the line
+        // Itera por los caracteres de una linea
         for (char c : line.toCharArray()) {
-            // Check if the character is a quote
+            // Verifica si el caracter es una comilla
             if (c == '"') {
-                // If it is, toggle the inQuotes flag
-                inQuotes = !inQuotes; // Toggle the inQuotes flag
+                inQuotes = !inQuotes;
             } else if (c == ',' && !inQuotes) {
-                // If we encounter a comma and we're not inside quotes, it's the end of a field
+                //Si el caracter es una coma y no está dentro de comillas, agrega el campo actual a la lista
                 fields.add(currentField.toString());
-                currentField.setLength(0); // Clear the current field
+                currentField.setLength(0); // Se limpia el campo actual
             } else {
-                // Otherwise, just add the character to the current field
+                // Si no es una coma o una comilla, se agrega el caracter al campo actual
                 currentField.append(c);
             }
         }
-        // Add the last field
+        //Se añade el ultimo campo
         fields.add(currentField.toString());
 
-        // Return the fields as an array
+        //Se retorna la linea parseada como un array
         return fields.toArray(new String[0]);
     }
 }

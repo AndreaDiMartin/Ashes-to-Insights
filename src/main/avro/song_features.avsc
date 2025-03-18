@@ -1,0 +1,67 @@
+{
+	"namespace": "classes.avro",
+	"type": "record",
+	"name": "SongsFeatures",
+	"fields": [
+		{
+			"name": "explicit", 
+			"type": "int",
+			"doc": "Booleano que representa si la cancion es explicita(1) o no (0)"
+		},
+		{
+			"name": "acousticness", 
+			"type": "float",
+			"doc": "Representa la probabilidad de que una canción sea acústica"
+		},
+        {
+			"name": "danceability", 
+			"type": "float",
+			"doc": "Representa la probabilidad de que una canción sea bailable"
+		},
+        {
+			"name": "energy", 
+			"type": "float",
+			"doc": "Representa la una medida de la intensidad y actividad de una cancion"
+		},
+        {
+			"name": "instrumentalness", 
+			"type": "float",
+			"doc": "Representa la prediccion si una pista no contiene voces"
+		},
+        {
+			"name": "key", 
+			"type": "int",
+			"doc": "Representa la escala de notas en la que se basa la canción"
+		},
+        {
+			"name": "liveness", 
+			"type": "float",
+			"doc": "Representa la probabilidad de que la canción haya sido grabada en vivo"
+		},
+        {
+			"name": "loudness", 
+			"type": "float",
+			"doc": "Indica cuan fuerte o suave se percibe una canción de decibelios"
+		},
+        {
+			"name": "speechiness", 
+			"type": "float",
+			"doc": "Representa la presencia de elementos hablados en una canción"
+		},
+        {
+			"name": "tempo", 
+			"type": "float",
+			"doc": "Representa la velocidad o ritmo al que se interpreta una canción en BPM (Beats Per Minute) "
+		},
+        {
+			"name": "time_signature", 
+			"type": "int",
+			"doc": "Representa la notacion musical que indica como se organiza el ritmo de una canción"
+		},
+        {
+			"name": "valence", 
+			"type": "float",
+			"doc": "Representa el tono emocional o de estado de animo de una canción"
+		}
+	]
+}

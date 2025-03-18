@@ -4,38 +4,30 @@
 
 package mapreduce;
 
-import org.apache.avro.Schema;
-import org.apache.avro.file.DataFileReader;
-import org.apache.avro.file.FileReader;
-import org.apache.avro.generic.GenericDatumReader;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.mapred.Pair;
-import org.apache.avro.Schema.Type;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// Esquemas usados
-import classes.avro.TypeValue;
-import classes.avro.DayValue;
-import classes.avro.MonthValue;
-import classes.avro.YearMonthSummary;
-import classes.avro.YearDaySummary;
-import classes.avro.MonthPublication;
-import classes.avro.DayPublication;
-import classes.avro.MonthlyPublicationRanking;
-import classes.avro.WeeklyAlbumReleases;
-import classes.avro.PopularityAnalysis;
+import org.apache.avro.Schema;
+import org.apache.avro.Schema.Type;
+import org.apache.avro.file.DataFileReader;
+import org.apache.avro.file.FileReader;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.mapred.Pair;
 
-import java.io.ByteArrayOutputStream;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.io.JsonEncoder;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.generic.GenericDatumWriter;
+import classes.avro.DayPublication;
+import classes.avro.DayValue;
+import classes.avro.MonthPublication;
+import classes.avro.MonthValue;
+import classes.avro.MonthlyPublicationRanking;
+import classes.avro.PopularityAnalysis;
+import classes.avro.SongsFeatures;
+import classes.avro.TypeValue;
+import classes.avro.WeeklyAlbumReleases;
+import classes.avro.YearDaySummary;
+import classes.avro.YearMonthSummary;
 
 
 public class DeserializationData {
@@ -58,7 +50,7 @@ public class DeserializationData {
             while (fileReader.hasNext()) {
                 GenericRecord record = fileReader.next();
 
-                // Extraer la clave (key)
+                // Extraer la key (key)
                 int key = (int) record.get("key");
 
                 // Extraer el valor (PopularityAnalysis)
@@ -113,7 +105,7 @@ public class DeserializationData {
             while (fileReader.hasNext()) {
                 GenericRecord record = fileReader.next();
 
-                // Extraer la clave 
+                // Extraer la key 
                 int key = (int) record.get("key");
 
                 // Extraer el valor como GenericRecord
@@ -125,11 +117,11 @@ public class DeserializationData {
                 StringBuilder daysOfWeekString = new StringBuilder("[");
                 for (GenericRecord dayAlbumData : daysOfWeek) {
                     String day = dayAlbumData.get("day").toString();
-                    int albumCount = (int) dayAlbumData.get("albumCount");
+                    int danceability = (int) dayAlbumData.get("danceability");
                     List<CharSequence> albumList = (List<CharSequence>) dayAlbumData.get("albumList");
 
                     // Formatear la información de cada día
-                    daysOfWeekString.append(String.format("\n{ Day: %s,\n AlbumCount: %d,\n AlbumList: %s}, ",day, albumCount, albumList.toString()));
+                    daysOfWeekString.append(String.format("\n{ Day: %s,\n danceability: %d,\n AlbumList: %s}, ",day, danceability, albumList.toString()));
                 }
 
                 if (daysOfWeekString.length() > 1) {
@@ -169,7 +161,7 @@ public class DeserializationData {
             while (fileReader.hasNext()) {
                 GenericRecord record = fileReader.next();
                 
-                // Extraer el valor de la clave 
+                // Extraer el valor de la key 
                 int key = (int) record.get("key");
 
                 // Extraer el valor asociado (value) como GenericRecord
@@ -427,6 +419,62 @@ public class DeserializationData {
         return records;
     }
 
+    public static List<String> getPairIntSongsFeatures(String avroFilePath) {
+        List<String> records = new ArrayList<>();
+
+        try {
+            // Definir el esquema del par
+            Schema schema = Pair.getPairSchema(Schema.create(Schema.Type.INT),  SongsFeatures.getClassSchema());
+
+            GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+            File avroFile = new File(avroFilePath);
+
+            // Leer el archivo Avro
+            FileReader<GenericRecord> fileReader = DataFileReader.openReader(avroFile, datumReader);
+
+            // Iterar sobre los registros
+            while (fileReader.hasNext()) {
+                GenericRecord record = fileReader.next();
+
+                // Extraer la key (key)
+                int key = (int) record.get("key");
+
+                // Extraer el valor (SongsFeatures)
+                GenericRecord valueRecord = (GenericRecord) record.get("value");
+
+                int explicit = (int) valueRecord.get("explicit");
+                float acousticness = (float) valueRecord.get("acousticness");
+                float danceability = (float) valueRecord.get("danceability");
+                float energy = (float) valueRecord.get("energy");
+                float instrumentalness = (float) valueRecord.get("instrumentalness");
+                int keySong = (int) valueRecord.get("key");
+                float liveness = (float) valueRecord.get("liveness");
+                float loudness = (float) valueRecord.get("loudness");
+                float speechiness = (float) valueRecord.get("speechiness");
+                float tempo = (float)  valueRecord.get("tempo");
+                int time_signature = (int) valueRecord.get("time_signature");
+                float valence = (float) valueRecord.get("valence");
+
+                // Crear un objeto de Pair
+                Pair<Integer, SongsFeatures> pair = new Pair<>(
+                    key,
+                    new SongsFeatures(explicit, acousticness, danceability, energy, instrumentalness, keySong, liveness, loudness, speechiness, tempo, time_signature, valence)
+                );
+
+                // Añadir el par como cadena a la lista
+                records.add(pair.toString());
+                records.add("\n");
+            }
+
+            fileReader.close(); // Cerrar el lector
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return records;
+    }
+
     /**
      * Deserializa los datos de un archivo Avro.
      * @param avroFilePath La ruta al archivo Avro.
@@ -438,7 +486,7 @@ public class DeserializationData {
         try {
             if(keyDataType.equals("int") && valueDataType.equals("int")){
                 
-            // Definir el esquema clave-valor
+            // Definir el esquema key-valor
             String schemaString = "{\"type\":\"record\",\"name\":\"Pair\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"int\"}]}";
             Schema schema = new Schema.Parser().parse(schemaString);
 
@@ -453,9 +501,9 @@ public class DeserializationData {
             while (fileReader.hasNext()) {
                 // Leer el siguiente registro
                 GenericRecord record = fileReader.next();
-                // Crear un par clave-valor y obtener los valores de la clave y el valor del registro
+                // Crear un par key-valor y obtener los valores de la key y el valor del registro
                 Pair<Integer, Integer> pair = new Pair<>(record.get("key"), record.get("value"));
-                // Imprimir el par clave-valor en la consola
+                // Imprimir el par key-valor en la consola
                 records.add(pair.toString());
                // System.out.println(pair.toString());
             }
@@ -463,7 +511,7 @@ public class DeserializationData {
             // Cerrar el lector de archivos
             fileReader.close();
         } else if(keyDataType.equals("string")&& valueDataType.equals("int")){
-            // Definir el esquema clave-valor
+            // Definir el esquema key-valor
             String schemaString = "{\"type\":\"record\",\"name\":\"Pair\",\"fields\":[{\"name\":\"key\",\"type\":\"string\"},{\"name\":\"value\",\"type\":\"int\"}]}";
             Schema schema = new Schema.Parser().parse(schemaString);
 
@@ -478,9 +526,9 @@ public class DeserializationData {
             while (fileReader.hasNext()) {
                 // Leer el siguiente registro
                 GenericRecord record = fileReader.next();
-                // Crear un par clave-valor y obtener los valores de la clave y el valor del registro
+                // Crear un par key-valor y obtener los valores de la key y el valor del registro
                 Pair<CharSequence, Integer> pair = new Pair<>(record.get("key"), record.get("value"));
-                // Imprimir el par clave-valor en la consola
+                // Imprimir el par key-valor en la consola
                 records.add(pair.toString());
                // System.out.println(pair.toString());
             }
@@ -488,7 +536,7 @@ public class DeserializationData {
             // Cerrar el lector de archivos
             fileReader.close();
         }else if(keyDataType.equals("int")&& valueDataType.equals("string")){
-            // Definir el esquema clave-valor
+            // Definir el esquema key-valor
             String schemaString = "{\"type\":\"record\",\"name\":\"Pair\",\"fields\":[{\"name\":\"key\",\"type\":\"int\"},{\"name\":\"value\",\"type\":\"string\"}]}";
             Schema schema = new Schema.Parser().parse(schemaString);
 
@@ -503,9 +551,9 @@ public class DeserializationData {
             while (fileReader.hasNext()) {
                 // Leer el siguiente registro
                 GenericRecord record = fileReader.next();
-                // Crear un par clave-valor y obtener los valores de la clave y el valor del registro
+                // Crear un par key-valor y obtener los valores de la key y el valor del registro
                 Pair<Integer, CharSequence> pair = new Pair<>(record.get("key"), record.get("value"));
-                // Imprimir el par clave-valor en la consola
+                // Imprimir el par key-valor en la consola
                 records.add(pair.toString());
                // System.out.println(pair.toString());
             }

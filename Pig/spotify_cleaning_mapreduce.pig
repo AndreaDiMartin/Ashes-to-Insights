@@ -39,7 +39,7 @@ AS (
     );
 
 -- Quitar nulos
-no_null = FILTER tracks BY release_date IS NOT NULL AND valence IS NOT NULL;
+no_null = FILTER tracks BY valence IS NOT NULL;
 
 -- Limpieza de las columnas y obtención de los campos de fecha
 filtered_tracks = FOREACH no_null GENERATE  id,

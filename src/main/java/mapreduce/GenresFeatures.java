@@ -25,9 +25,7 @@ import classes.avro.spotify;
 public class GenresFeatures extends Configured implements Tool{
         //Función para separar por decadas el año de publicacion de una canción
         private static String DecadeParser(Integer year){
-        if(year >= 1800 && year < 1900){
-            return "1800s";
-        } else if (year >= 1900 && year < 1910) {
+        if (year >= 1900 && year < 1910) {
             return "1900s";
         } else if (year >= 1910 && year < 1920) {
             return "1910s";
@@ -71,7 +69,7 @@ public class GenresFeatures extends Configured implements Tool{
             if (mainGenre.equals(genreToSelect)) {
                 genre_id = mainGenre;
             }      
-            if(year != null && year > 1 && genre_id.equals(genreToSelect)){
+            if(year != null && year > 1900 && genre_id.equals(genreToSelect)){
                 //Casting de los valores de las caracteristicas a seleccionar
                 Integer explicit = (Integer) track.getExplicit();
                 Float energy = (Float) track.getEnergy();

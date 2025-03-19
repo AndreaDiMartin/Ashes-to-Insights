@@ -1,4 +1,6 @@
-# Compilación
+# Segunda Entrega - Grupo: Ashes to Insights
+
+## Compilación
 Primero hacer
 ```bash
 mvn install
@@ -12,12 +14,7 @@ Para correr el serializer
 mvn -q exec:java -Dexec.mainClass=mapreduce.SpotifySerializer -Dexec.args="serializer"
 ```
 
-Para correr el contador de tracks por año
-```bash
-mvn -q exec:java -Dexec.mainClass=mapreduce.YearCounterMapRed -Dexec.args="outputSerializado outputYearCounter"
-```
-
-## Análisis de los albumes
+## Ejemplo de cómo correr algunos de los trabajos
 
 Para correr el contador de Albums por año (El nombre de salida puede ser distinto)
 ```bash

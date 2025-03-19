@@ -1,6 +1,6 @@
 package mapreduce.genreanalysis;
 
-//Parte 3 -  - Generos mas populares por año
+//Parte 3 - Generos mas populares por año
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

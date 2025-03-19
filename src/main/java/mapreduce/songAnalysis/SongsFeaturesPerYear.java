@@ -29,6 +29,7 @@ import classes.avro.spotify;
 
 public class SongsFeaturesPerYear extends Configured implements Tool {
 
+    // Clase Mapper para procesar cada registro y emitir el año y las caracteristicas de la canción
     public static class SongsFeaturesMapper extends AvroMapper<spotify, Pair<Integer, SongsFeatures>> 
     {
         @Override
@@ -38,6 +39,7 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
             CharSequence name = track.getTrackName();
             Integer popularity = (int)track.getPopularity();
 
+            // Filtrar registros con año válido, nombre no nulo y popularidad mayor a 70
             if (year != null && year != 1 && name != null && popularity > 70) {
                 SongsFeatures SF = new SongsFeatures(
                     (int) track.getExplicit(),
@@ -54,13 +56,13 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
                     (float) track.getValence()
                 );
 
+                // Emitir el año y las caracteristicas de la canción
                 collector.collect(new Pair<>(year, SF));
             }
         }
-
-
     }
 
+    // Clase Reducer para calcular el promedio de las características de las canciones por año
     public static class AverageFeaturesReducer extends AvroReducer<Integer, SongsFeatures, Pair<Integer, SongsFeatures>> {
         @Override
         public void reduce(Integer year, Iterable<SongsFeatures> SFs, AvroCollector<Pair<Integer, SongsFeatures>> collector, Reporter reporter) throws IOException {
@@ -72,6 +74,7 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
             float speechinessSum = 0, tempoSum = 0, valenceSum = 0;
             int key = 0, timeSignature = 0;
     
+            // Sumar las caracteristicas de todas las canciones del mismo año
             for (SongsFeatures SF : SFs) {
                 explicitSum += SF.getExplicit();
                 acousticnessSum += SF.getAcousticness();
@@ -89,6 +92,7 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
                 count++;
             }
     
+            // Calcular el promedio de las caracteristicas si hay al menos una canción
             if (count > 0) {
                 SongsFeatures avgSF = new SongsFeatures(
                     explicitSum / count,
@@ -105,12 +109,14 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
                     valenceSum / count
                 );
     
+                // Emitir el año y las caracteristicas promedio
                 collector.collect(new Pair<>(year, avgSF));
             }
         }
     }
     
 
+    // Metodo principal para configurar y ejecutar el trabajo MapReduce
     public int run(String[] args) throws Exception {
         if (args.length != 2) {
             System.err.println("Usage: SongsFeaturesPerYear <input path> <output path>");
@@ -120,23 +126,29 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
         JobConf conf = new JobConf(getConf(), SongsFeaturesPerYear.class);
         conf.setJobName("SongsFeaturesPerYear");
 
+        // Eliminar la ruta de salida si existe
         Path outputPath = new Path(args[1]);
         outputPath.getFileSystem(conf).delete(outputPath, true);
 
+        // Establecer rutas de entrada y salida
         FileInputFormat.addInputPath(conf, new Path(args[0]));
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
+        // Establecer esquemas de entrada y salida
         AvroJob.setInputSchema(conf, spotify.getClassSchema());
         AvroJob.setMapOutputSchema(conf, Pair.getPairSchema(Schema.create(Type.INT), SongsFeatures.getClassSchema()));
         AvroJob.setOutputSchema(conf, Pair.getPairSchema(Schema.create(Type.INT), SongsFeatures.getClassSchema()));
 
+        // Establecer clases Mapper y Reducer
         AvroJob.setMapperClass(conf, SongsFeaturesMapper.class);
         AvroJob.setReducerClass(conf, AverageFeaturesReducer.class);
 
+        // Ejecutar el trabajo
         JobClient.runJob(conf);
         return 0;
     }
 
+    // Metodo principal para ejecutar el trabajo y manejar la conversión de salida
     public static void main(String[] args) throws Exception 
     {
 
@@ -145,14 +157,13 @@ public class SongsFeaturesPerYear extends Configured implements Tool {
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
 
-
         // Procesa la salida si el trabajo fue exitoso
         if (res == 0) 
         {
 
             System.out.println("Trabajo terminado con éxito");
 
-            //Comienzo del proceso de deserialización
+            // Comienzo del proceso de deserialización
             File outputDir = new File(args[1]);
             File[] outputFiles = outputDir.listFiles();
 

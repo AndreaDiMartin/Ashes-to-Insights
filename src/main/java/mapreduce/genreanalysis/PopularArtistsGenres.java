@@ -1,4 +1,4 @@
-package mapreduce.artistsanalysis;
+package mapreduce.genreanalysis;
 
 //Problema 3: Géneros de los artistas más populares
 
